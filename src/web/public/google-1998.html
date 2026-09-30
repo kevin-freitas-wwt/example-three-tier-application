@@ -11,6 +11,7 @@
     margin: 0;
     padding: 0;
     color: #000000;
+    overflow-x: hidden;
   }
   a {
     color: #0000cc;
@@ -102,6 +103,18 @@
     color: #666666;
     padding-bottom: 20px;
   }
+
+  /* Everything that runs away from the mouse gets a smooth, springy
+     little slide back to its resting spot. */
+  .runaway,
+  .flee-target {
+    display: inline-block;
+    transition: transform 0.12s ease-out;
+    will-change: transform;
+  }
+  hr.flee-target {
+    display: block;
+  }
 </style>
 </head>
 <body>
@@ -120,13 +133,13 @@
 
   <div class="search-wrap">
     <form action="#" onsubmit="return false;">
-      <input type="text" class="search-box" name="q">
+      <input type="text" class="search-box flee-target" name="q">
     </form>
   </div>
 
   <div class="buttons">
-    <input type="submit" value="Google Search">
-    <input type="submit" value="I'm Feeling Lucky">
+    <input type="submit" value="Google Search" class="flee-target">
+    <input type="submit" value="I'm Feeling Lucky" class="flee-target">
   </div>
 
   <div class="categories">
@@ -136,7 +149,7 @@
     <a href="#">Groups</a>
   </div>
 
-  <hr class="thin">
+  <hr class="thin flee-target">
 
   <div class="below">
     <a href="#">Company Info</a> |
@@ -149,6 +162,120 @@
   <div class="footer">
     &copy;1998 Google Inc.
   </div>
+
+<script>
+(function () {
+  "use strict";
+
+  // How close the mouse has to be before something starts fleeing,
+  // and how far things can slide away.
+  var AVOID_RADIUS = 130;
+  var MAX_PUSH = 70;
+
+  // ---- Step 1: split every bit of visible text into one <span> per
+  // letter, so each character can run away on its own. ----
+  function splitTextIntoLetters(root) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        var parentTag = node.parentNode && node.parentNode.nodeName;
+        if (parentTag === "SCRIPT" || parentTag === "STYLE") {
+          return NodeFilter.FILTER_REJECT;
+        }
+        // Skip pure whitespace text nodes (the indentation between
+        // tags) so the page layout doesn't get disturbed.
+        if (!/\S/.test(node.nodeValue)) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    var textNodes = [];
+    var n;
+    while ((n = walker.nextNode())) {
+      textNodes.push(n);
+    }
+
+    textNodes.forEach(function (node) {
+      var text = node.nodeValue;
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < text.length; i++) {
+        var ch = text[i];
+        var span = document.createElement("span");
+        span.className = "runaway";
+        span.textContent = ch === " " ? "\u00A0" : ch;
+        frag.appendChild(span);
+      }
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
+  splitTextIntoLetters(document.body);
+
+  // ---- Step 2: gather every letter, box, button and line that
+  // should try to avoid the mouse cursor. ----
+  var fleeElements = Array.prototype.slice.call(
+    document.querySelectorAll(".runaway, .flee-target")
+  );
+
+  var homes = fleeElements.map(function (el) {
+    return { el: el, x: 0, y: 0 };
+  });
+
+  function recalcHomes() {
+    homes.forEach(function (home) {
+      home.el.style.transform = "translate(0px, 0px)";
+    });
+    homes.forEach(function (home) {
+      var rect = home.el.getBoundingClientRect();
+      home.x = rect.left + rect.width / 2;
+      home.y = rect.top + rect.height / 2;
+    });
+  }
+
+  recalcHomes();
+  window.addEventListener("resize", recalcHomes);
+
+  var mouseX = -9999;
+  var mouseY = -9999;
+  var hasMouse = false;
+
+  document.addEventListener("mousemove", function (e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    hasMouse = true;
+  });
+
+  document.addEventListener("mouseleave", function () {
+    hasMouse = false;
+  });
+
+  function tick() {
+    homes.forEach(function (home) {
+      if (!hasMouse) {
+        home.el.style.transform = "translate(0px, 0px)";
+        return;
+      }
+      var dx = home.x - mouseX;
+      var dy = home.y - mouseY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < AVOID_RADIUS && dist > 0.01) {
+        var strength = (AVOID_RADIUS - dist) / AVOID_RADIUS;
+        var push = strength * MAX_PUSH;
+        var nx = (dx / dist) * push;
+        var ny = (dy / dist) * push;
+        home.el.style.transform = "translate(" + nx.toFixed(1) + "px, " + ny.toFixed(1) + "px)";
+      } else {
+        home.el.style.transform = "translate(0px, 0px)";
+      }
+    });
+    window.requestAnimationFrame(tick);
+  }
+
+  window.requestAnimationFrame(tick);
+})();
+</script>
 
 </body>
 </html>
