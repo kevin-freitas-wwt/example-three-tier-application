@@ -130,3 +130,7 @@ DATABASE_URL=postgres://app:app@localhost:5432/app npx node-pg-migrate down
 ```
 
 When running via Docker Compose the `migrate` service handles this automatically on startup.
+
+## Documentation changes
+
+Documentation-only changes (such as edits to this README) should still be submitted and reviewed in a pull request before merging, rather than pushed directly to the main branch. This keeps a record of what changed and why, and gives reviewers a chance to catch mistakes even when no application code is affected.
