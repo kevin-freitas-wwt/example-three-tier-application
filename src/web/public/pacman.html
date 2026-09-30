@@ -7,12 +7,22 @@
 <meta name="description" content="A non-interactive, pure HTML/CSS tribute screen inspired by the classic Pac-Man arcade game." />
 <style>
   :root {
-    --wall-color: #2121de;
-    --wall-glow: #4a4aff;
-    --bg-color: #000;
-    --dot-color: #ffe5c2;
-    --pellet-color: #ffe5c2;
-    --pacman-color: #ffd93b;
+    /* Wacky palette: every color on the screen is defined here. */
+    --wall-color: #39ff14;   /* neon lime */
+    --wall-glow: #ff00ff;    /* magenta */
+    --bg-color: #1b0036;     /* deep grape */
+    --dot-color: #00e5ff;    /* electric cyan */
+    --pellet-color: #ff8c00; /* traffic-cone orange */
+    --pacman-color: #ff2bd6; /* hot magenta */
+    --hud-text: #fffb96;     /* lemon cream */
+    --score-label: #00ffa2;  /* mint */
+    --ready-color: #ffe600;  /* highlighter yellow */
+    --footer-color: #9b7bff; /* lavender */
+    --ghost-eye: #ffffff;
+    --ghost-1: #ffe600;      /* yellow */
+    --ghost-2: #00ffa2;      /* mint */
+    --ghost-3: #ff3b00;      /* red-orange */
+    --ghost-4: #b388ff;      /* lilac */
   }
 
   * {
@@ -44,14 +54,14 @@
     justify-content: space-between;
     align-items: center;
     width: min(90vw, 620px);
-    color: #fff;
+    color: var(--hud-text);
     letter-spacing: 2px;
   }
 
   .title {
     text-align: center;
     color: var(--pacman-color);
-    text-shadow: 0 0 8px rgba(255, 217, 59, 0.7);
+    text-shadow: 0 0 8px rgba(255, 43, 214, 0.7);
     font-size: clamp(1.5rem, 4vw, 2.75rem);
     font-weight: bold;
     letter-spacing: 6px;
@@ -70,11 +80,11 @@
   }
 
   .score-label {
-    color: #ff6161;
+    color: var(--score-label);
   }
 
   .score-value {
-    color: #fff;
+    color: var(--hud-text);
   }
 
   .lives {
@@ -100,7 +110,7 @@
     background: var(--bg-color);
     border: clamp(4px, 1vw, 8px) solid var(--wall-color);
     box-shadow:
-      0 0 0 2px #000 inset,
+      0 0 0 2px var(--bg-color) inset,
       0 0 18px 2px var(--wall-glow);
     border-radius: 6px;
     padding: clamp(4px, 1vw, 8px);
@@ -127,7 +137,7 @@
     min-height: 3px;
     background: var(--dot-color);
     border-radius: 50%;
-    box-shadow: 0 0 3px rgba(255, 229, 194, 0.8);
+    box-shadow: 0 0 3px rgba(0, 229, 255, 0.8);
   }
 
   .pellet {
@@ -137,7 +147,7 @@
     min-height: 6px;
     background: var(--pellet-color);
     border-radius: 50%;
-    box-shadow: 0 0 6px 2px rgba(255, 229, 194, 0.9);
+    box-shadow: 0 0 6px 2px rgba(255, 140, 0, 0.9);
     animation: pulse 1s ease-in-out infinite;
   }
 
@@ -155,7 +165,7 @@
       100% 74%, 44% 48%, 100% 24%,
       100% 0, 0 0, 0 100%, 100% 100%
     );
-    box-shadow: 0 0 10px 2px rgba(255, 217, 59, 0.8);
+    box-shadow: 0 0 10px 2px rgba(255, 43, 214, 0.8);
     transform: rotate(0deg);
   }
 
@@ -188,26 +198,26 @@
     left: 18%;
     width: 22%;
     height: 26%;
-    background: #fff;
+    background: var(--ghost-eye);
     border-radius: 50%;
-    box-shadow: 32% 0 0 #fff;
+    box-shadow: 32% 0 0 var(--ghost-eye);
   }
 
-  .ghost-red { background: #ff3b3b; }
-  .ghost-pink { background: #ffb8ff; }
-  .ghost-cyan { background: #59ffff; }
-  .ghost-orange { background: #ffb851; }
+  .ghost-red { background: var(--ghost-1); }
+  .ghost-pink { background: var(--ghost-2); }
+  .ghost-cyan { background: var(--ghost-3); }
+  .ghost-orange { background: var(--ghost-4); }
 
   .ready {
     position: absolute;
     top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #ffd93b;
+    color: var(--ready-color);
     font-weight: bold;
     font-size: clamp(0.75rem, 2vw, 1.15rem);
     letter-spacing: 3px;
-    text-shadow: 0 0 6px rgba(255, 217, 59, 0.85);
+    text-shadow: 0 0 6px rgba(255, 230, 0, 0.85);
     white-space: nowrap;
     z-index: 5;
     animation: blink 1.4s steps(2, jump-none) infinite;
@@ -219,7 +229,7 @@
   }
 
   .footer-note {
-    color: #6a6a6a;
+    color: var(--footer-color);
     font-size: clamp(0.6rem, 1.3vw, 0.8rem);
     text-align: center;
     letter-spacing: 1px;
