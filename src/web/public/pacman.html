@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<!-- Standalone, non-interactive Pac-Man style animation built with HTML and CSS only (no JavaScript). -->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Pac-Man Screen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {
+    --tile: 32px;
+    --board-w: 15;
+    --board-h: 11;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    font-family: "Courier New", monospace;
+  }
+
+  .screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    background: radial-gradient(circle at 50% 20%, #001a33 0%, #000 70%);
+  }
+
+  .title {
+    color: #ffe94d;
+    font-size: 28px;
+    letter-spacing: 6px;
+    text-shadow: 0 0 8px #ffb700, 0 0 2px #fff;
+    margin-bottom: 14px;
+    animation: flicker 1.6s infinite steps(2);
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+
+  .board {
+    position: relative;
+    width: calc(var(--tile) * var(--board-w));
+    height: calc(var(--tile) * var(--board-h));
+    background: #000;
+    border: 4px solid #2626ff;
+    border-radius: 10px;
+    box-shadow:
+      0 0 0 4px #000,
+      0 0 20px 4px rgba(38, 38, 255, 0.7),
+      inset 0 0 15px rgba(38, 38, 255, 0.5);
+    overflow: hidden;
+  }
+
+  /* --- Maze walls (purely decorative divs, CSS only) --- */
+  .wall {
+    position: absolute;
+    background: #2626ff;
+    border-radius: 4px;
+    box-shadow: 0 0 6px rgba(38, 38, 255, 0.9);
+  }
+
+  .wall.w1 { top: calc(var(--tile) * 1); left: calc(var(--tile) * 1); width: calc(var(--tile) * 3); height: 8px; }
+  .wall.w2 { top: calc(var(--tile) * 1); left: calc(var(--tile) * 6); width: calc(var(--tile) * 3); height: 8px; }
+  .wall.w3 { top: calc(var(--tile) * 1); left: calc(var(--tile) * 11); width: calc(var(--tile) * 3); height: 8px; }
+  .wall.w4 { top: calc(var(--tile) * 3); left: calc(var(--tile) * 3); width: 8px; height: calc(var(--tile) * 2); }
+  .wall.w5 { top: calc(var(--tile) * 3); left: calc(var(--tile) * 11); width: 8px; height: calc(var(--tile) * 2); }
+  .wall.w6 { top: calc(var(--tile) * 5); left: calc(var(--tile) * 1); width: calc(var(--tile) * 4); height: 8px; }
+  .wall.w7 { top: calc(var(--tile) * 5); left: calc(var(--tile) * 10); width: calc(var(--tile) * 4); height: 8px; }
+  .wall.w8 { top: calc(var(--tile) * 7); left: calc(var(--tile) * 6); width: calc(var(--tile) * 3); height: 8px; }
+  .wall.w9 { top: calc(var(--tile) * 9); left: calc(var(--tile) * 1); width: calc(var(--tile) * 3); height: 8px; }
+  .wall.w10 { top: calc(var(--tile) * 9); left: calc(var(--tile) * 6); width: calc(var(--tile) * 3); height: 8px; }
+  .wall.w11 { top: calc(var(--tile) * 9); left: calc(var(--tile) * 11); width: calc(var(--tile) * 3); height: 8px; }
+
+  /* --- Dots row that Pac-Man appears to eat --- */
+  .dots-row {
+    position: absolute;
+    top: calc(var(--tile) * 5 + 14px);
+    left: 0;
+    width: 100%;
+    height: var(--tile);
+    display: flex;
+    align-items: center;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    margin-left: calc(var(--tile) - 6px);
+    background: #ffe94d;
+    border-radius: 50%;
+    box-shadow: 0 0 4px #ffe94d;
+    animation: eaten 6s linear infinite;
+  }
+
+  .dot:first-child { margin-left: calc(var(--tile) / 2); }
+
+  /* Stagger each dot's disappearance so it looks like Pac-Man eats it in turn */
+  .dot:nth-child(1) { animation-delay: 0s; }
+  .dot:nth-child(2) { animation-delay: 0.35s; }
+  .dot:nth-child(3) { animation-delay: 0.7s; }
+  .dot:nth-child(4) { animation-delay: 1.05s; }
+  .dot:nth-child(5) { animation-delay: 1.4s; }
+  .dot:nth-child(6) { animation-delay: 1.75s; }
+  .dot:nth-child(7) { animation-delay: 2.1s; }
+  .dot:nth-child(8) { animation-delay: 2.45s; }
+  .dot:nth-child(9) { animation-delay: 2.8s; }
+  .dot:nth-child(10) { animation-delay: 3.15s; }
+  .dot:nth-child(11) { animation-delay: 3.5s; }
+  .dot:nth-child(12) { animation-delay: 3.85s; }
+  .dot:nth-child(13) { animation-delay: 4.2s; }
+
+  @keyframes eaten {
+    0%   { opacity: 1; transform: scale(1); }
+    4%   { opacity: 0; transform: scale(0); }
+    96%  { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  /* --- Pac-Man --- */
+  .pacman {
+    position: absolute;
+    top: calc(var(--tile) * 5 + 4px);
+    left: calc(var(--tile) / 2 - 12px);
+    width: 26px;
+    height: 26px;
+    animation: run 6s linear infinite;
+  }
+
+  .pacman .body {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #ffe94d;
+    box-shadow: 0 0 10px #ffb700;
+    animation: chomp 0.32s linear infinite;
+    transform-origin: center;
+  }
+
+  @keyframes chomp {
+    0%   { clip-path: polygon(100% 50%, 45% 0%, 100% 0%, 100% 100%, 45% 100%); }
+    50%  { clip-path: polygon(100% 50%, 100% 45%, 100% 55%); }
+    100% { clip-path: polygon(100% 50%, 45% 0%, 100% 0%, 100% 100%, 45% 100%); }
+  }
+
+  @keyframes run {
+    0%   { left: calc(var(--tile) / 2 - 12px); }
+    45%  { left: calc(100% - var(--tile) / 2 - 14px); }
+    50%  { left: calc(100% - var(--tile) / 2 - 14px); }
+    95%  { left: calc(var(--tile) / 2 - 12px); }
+    100% { left: calc(var(--tile) / 2 - 12px); }
+  }
+
+  /* --- Ghosts --- */
+  .ghost {
+    position: absolute;
+    top: calc(var(--tile) * 5 + 4px);
+    width: 26px;
+    height: 24px;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  .ghost .shell {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 13px 13px 0 0;
+    animation: bob 0.5s ease-in-out infinite alternate;
+  }
+
+  .ghost .shell::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background:
+      radial-gradient(circle 5px at 8px 0, transparent 5px, currentColor 5.5px) -1px 0,
+      radial-gradient(circle 5px at 21px 0, transparent 5px, currentColor 5.5px) -1px 0;
+    background-color: currentColor;
+    -webkit-mask: none;
+  }
+
+  .ghost .eyes {
+    position: absolute;
+    top: 7px;
+    left: 4px;
+    width: 100%;
+    display: flex;
+    gap: 5px;
+  }
+
+  .ghost .eyes span {
+    width: 6px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    position: relative;
+  }
+
+  .ghost .eyes span::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 3px;
+    height: 4px;
+    background: #1b1bff;
+    border-radius: 50%;
+  }
+
+  @keyframes bob {
+    from { transform: translateY(0); }
+    to   { transform: translateY(2px); }
+  }
+
+  .ghost.red    { color: #ff2b2b; animation-name: chase-right; animation-duration: 6s; }
+  .ghost.pink   { color: #ffb8ff; animation-name: chase-right; animation-duration: 6s; animation-delay: -1s; }
+  .ghost.cyan   { color: #66ffff; animation-name: chase-right; animation-duration: 6s; animation-delay: -2s; }
+  .ghost.orange { color: #ffb852; animation-name: chase-right; animation-duration: 6s; animation-delay: -3s; }
+
+  .ghost .shell { background: currentColor; }
+
+  @keyframes chase-right {
+    0%   { left: calc(var(--tile) / 2 - 40px); }
+    45%  { left: calc(100% - var(--tile) / 2 - 54px); }
+    50%  { left: calc(100% - var(--tile) / 2 - 54px); }
+    95%  { left: calc(var(--tile) / 2 - 40px); }
+    100% { left: calc(var(--tile) / 2 - 40px); }
+  }
+
+  .footer-text {
+    margin-top: 16px;
+    color: #66ffff;
+    font-size: 13px;
+    letter-spacing: 2px;
+    opacity: 0.85;
+  }
+</style>
+</head>
+<body>
+  <div class="screen">
+    <div class="title">PAC-MAN</div>
+
+    <div class="board">
+      <div class="wall w1"></div>
+      <div class="wall w2"></div>
+      <div class="wall w3"></div>
+      <div class="wall w4"></div>
+      <div class="wall w5"></div>
+      <div class="wall w6"></div>
+      <div class="wall w7"></div>
+      <div class="wall w8"></div>
+      <div class="wall w9"></div>
+      <div class="wall w10"></div>
+      <div class="wall w11"></div>
+
+      <div class="dots-row">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="pacman">
+        <div class="body"></div>
+      </div>
+
+      <div class="ghost red">
+        <div class="shell"></div>
+        <div class="eyes"><span></span><span></span></div>
+      </div>
+      <div class="ghost pink">
+        <div class="shell"></div>
+        <div class="eyes"><span></span><span></span></div>
+      </div>
+      <div class="ghost cyan">
+        <div class="shell"></div>
+        <div class="eyes"><span></span><span></span></div>
+      </div>
+      <div class="ghost orange">
+        <div class="shell"></div>
+        <div class="eyes"><span></span><span></span></div>
+      </div>
+    </div>
+
+    <div class="footer-text">HTML &amp; CSS ONLY &mdash; NO SCRIPTS</div>
+  </div>
+</body>
+</html>
