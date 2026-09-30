@@ -68,24 +68,36 @@
     height: 8px;
     border-radius: 50%;
     background: #ffb8ae;
-    animation: chomp-away 6s linear infinite;
   }
 
-  @keyframes chomp-away {
-    0%, 40% { opacity: 1; }
-    41%, 100% { opacity: 0; }
-  }
+  /*
+   * Each dot uses the same 6s duration as Pac-Man's travel animation
+   * (see .pacman / @keyframes travel) and no animation-delay, so every
+   * loop starts in sync: all dots are visible at 0% and disappear at
+   * the percentage of the 6s cycle when Pac-Man's mouth actually
+   * reaches that dot's horizontal position on the 480px board.
+   */
+  .dot:nth-child(1)  { animation: chomp-dot-1  6s linear infinite; }
+  .dot:nth-child(2)  { animation: chomp-dot-2  6s linear infinite; }
+  .dot:nth-child(3)  { animation: chomp-dot-3  6s linear infinite; }
+  .dot:nth-child(4)  { animation: chomp-dot-4  6s linear infinite; }
+  .dot:nth-child(5)  { animation: chomp-dot-5  6s linear infinite; }
+  .dot:nth-child(6)  { animation: chomp-dot-6  6s linear infinite; }
+  .dot:nth-child(7)  { animation: chomp-dot-7  6s linear infinite; }
+  .dot:nth-child(8)  { animation: chomp-dot-8  6s linear infinite; }
+  .dot:nth-child(9)  { animation: chomp-dot-9  6s linear infinite; }
+  .dot:nth-child(10) { animation: chomp-dot-10 6s linear infinite; }
 
-  .dot:nth-child(1) { animation-delay: 0s; }
-  .dot:nth-child(2) { animation-delay: 0.4s; }
-  .dot:nth-child(3) { animation-delay: 0.8s; }
-  .dot:nth-child(4) { animation-delay: 1.2s; }
-  .dot:nth-child(5) { animation-delay: 1.6s; }
-  .dot:nth-child(6) { animation-delay: 2.0s; }
-  .dot:nth-child(7) { animation-delay: 2.4s; }
-  .dot:nth-child(8) { animation-delay: 2.8s; }
-  .dot:nth-child(9) { animation-delay: 3.2s; }
-  .dot:nth-child(10) { animation-delay: 3.6s; }
+  @keyframes chomp-dot-1  { 0%, 14% { opacity: 1; } 15%, 100% { opacity: 0; } }
+  @keyframes chomp-dot-2  { 0%, 21% { opacity: 1; } 22%, 100% { opacity: 0; } }
+  @keyframes chomp-dot-3  { 0%, 29% { opacity: 1; } 30%, 100% { opacity: 0; } }
+  @keyframes chomp-dot-4  { 0%, 36% { opacity: 1; } 37%, 100% { opacity: 0; } }
+  @keyframes chomp-dot-5  { 0%, 44% { opacity: 1; } 45%, 100% { opacity: 0; } }
+  @keyframes chomp-dot-6  { 0%, 51% { opacity: 1; } 52%, 100% { opacity: 0; } }
+  @keyframes chomp-dot-7  { 0%, 58% { opacity: 1; } 59%, 100% { opacity: 0; } }
+  @keyframes chomp-dot-8  { 0%, 66% { opacity: 1; } 67%, 100% { opacity: 0; } }
+  @keyframes chomp-dot-9  { 0%, 73% { opacity: 1; } 74%, 100% { opacity: 0; } }
+  @keyframes chomp-dot-10 { 0%, 81% { opacity: 1; } 82%, 100% { opacity: 0; } }
 
   /* Pac-Man */
   .pacman {
