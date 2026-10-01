@@ -2,7 +2,6 @@ const express = require('express');
 const db = require('./db');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 
@@ -48,6 +47,20 @@ app.patch('/tasks/:id', async (req, res) => {
   res.json(updated[0]);
 });
 
-app.listen(PORT, () => {
-  console.log(`API listening on port ${PORT}`);
+// DELETE /tasks/:id — delete a task
+app.delete('/tasks/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const { rowCount } = await db.query('DELETE FROM tasks WHERE id = $1', [id]);
+  if (rowCount === 0) return res.status(404).json({ error: 'Not found' });
+  res.status(204).end();
 });
+
+// Only start listening when run directly (not when required by tests)
+if (require.main === module) {
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`API listening on port ${PORT}`);
+  });
+}
+
+module.exports = app;

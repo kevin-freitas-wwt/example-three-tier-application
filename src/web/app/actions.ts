@@ -35,3 +35,25 @@ export async function toggleTask(id: number, completed: boolean) {
   });
   revalidatePath('/');
 }
+
+export async function deleteTask(id: number): Promise<void> {
+  await fetch(`${API_URL}/tasks/${id}`, {
+    method: 'DELETE',
+  });
+  revalidatePath('/');
+}
+
+export async function updateTaskTitle(
+  id: number,
+  title: string,
+  originalTitle: string,
+): Promise<void> {
+  const trimmed = title.trim();
+  if (!trimmed || trimmed === originalTitle) return;
+  await fetch(`${API_URL}/tasks/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title: trimmed }),
+  });
+  revalidatePath('/');
+}
