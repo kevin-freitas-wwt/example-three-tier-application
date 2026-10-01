@@ -18,6 +18,8 @@ src/api/
 ├── package.json
 ├── Dockerfile
 └── test/           # Test files (Node.js native test runner)
+    ├── health.test.js   # GET /health smoke test (spawns a real process)
+    └── tasks.test.js    # DELETE /tasks/:id unit tests (db stub, no DB needed)
 ```
 
 ## Core Files
@@ -28,9 +30,10 @@ Exports an Express application with the following structure:
 
 - **JSON middleware** — `app.use(express.json())`
 - **Health check endpoint** — `/health` for monitoring
-- **Task endpoints** — CRUD operations on tasks
+- **Task endpoints** — full CRUD operations on tasks
 - **Error handling** — HTTP status codes and error messages
 - **Port configuration** — Reads `PORT` environment variable (default: 3001)
+- **Conditional listen** — `app.listen()` only runs when the file is executed directly (`require.main === module`), so tests can `require` the app without starting a server
 
 ### `db.js` — PostgreSQL Connection
 
@@ -141,6 +144,21 @@ Updates the task completion status and/or title. Omitted fields retain their cur
 { "error": "Not found" }
 ```
 
+### Delete Task
+
+```
+DELETE /tasks/:id
+```
+
+Permanently deletes the task with the given ID.
+
+**Response (204 No Content):** empty body — task was deleted.
+
+**Error (404 Not Found):**
+```json
+{ "error": "Not found" }
+```
+
 ## Environment Variables
 
 ```bash
@@ -172,7 +190,9 @@ Starts the server with `node index.js`.
 npm test
 ```
 
-Uses Node.js native test runner (`node --test`).
+Uses Node.js native test runner (`node --test`).  Tests cover:
+- `GET /health` — spawns the process, checks the response
+- `DELETE /tasks/:id` — stubs `db.js`, runs both 204 and 404 paths
 
 ## Dependencies
 
@@ -205,6 +225,7 @@ The API returns appropriate HTTP status codes:
 
 - **200 OK** — Successful GET or PATCH
 - **201 Created** — Successful POST
+- **204 No Content** — Successful DELETE
 - **400 Bad Request** — Invalid input (missing/invalid title)
 - **404 Not Found** — Task ID does not exist
 - **500 Internal Server Error** — Database or server errors (not explicitly handled, Express default)
