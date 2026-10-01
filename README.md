@@ -66,6 +66,10 @@ The API is not exposed directly, but you can reach it through the web container 
 | POST | `/tasks` | Create a task (`{ "title": "..." }`) |
 | PATCH | `/tasks/:id` | Update a task (`{ "completed": true }` or `{ "title": "..." }`) |
 
+### Static pages
+
+Files placed in `src/web/public/` are served as-is by the web tier, with no server-side rendering or JavaScript involved. As an example, [http://localhost:3000/pacman.html](http://localhost:3000/pacman.html) is a non-interactive Pac-Man tribute screen (maze, dots, power pellets, ghosts, Pac-Man, and a scoreboard) built with plain HTML and CSS only.
+
 ## Project structure
 
 ```
@@ -79,6 +83,7 @@ src/
 │   └── Dockerfile
 ├── web/            # Next.js frontend
 │   ├── app/        # App Router pages and components
+│   ├── public/     # Static assets served as-is (includes pacman.html)
 │   └── Dockerfile
 └── infrastructure/ # Terraform for GCP deployment
     ├── main.tf

@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>PAC-MAN</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="A non-interactive, pure HTML/CSS tribute screen inspired by the classic Pac-Man arcade game." />
+<style>
+  :root {
+    /* Wacky palette: every color on the screen is defined here. */
+    --wall-color: #39ff14;   /* neon lime */
+    --wall-glow: #ff00ff;    /* magenta */
+    --bg-color: #1b0036;     /* deep grape */
+    --dot-color: #00e5ff;    /* electric cyan */
+    --pellet-color: #ff8c00; /* traffic-cone orange */
+    --pacman-color: #ff2bd6; /* hot magenta */
+    --hud-text: #fffb96;     /* lemon cream */
+    --score-label: #00ffa2;  /* mint */
+    --ready-color: #ffe600;  /* highlighter yellow */
+    --footer-color: #9b7bff; /* lavender */
+    --ghost-eye: #ffffff;
+    --ghost-1: #ffe600;      /* yellow */
+    --ghost-2: #00ffa2;      /* mint */
+    --ghost-3: #ff3b00;      /* red-orange */
+    --ghost-4: #b388ff;      /* lilac */
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-color);
+    height: 100%;
+    overflow: hidden;
+    font-family: "Courier New", "Consolas", monospace;
+  }
+
+  .screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    gap: clamp(0.75rem, 2vh, 1.5rem);
+    padding: clamp(0.5rem, 2vh, 2rem) 1rem;
+  }
+
+  .hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: min(90vw, 620px);
+    color: var(--hud-text);
+    letter-spacing: 2px;
+  }
+
+  .title {
+    text-align: center;
+    color: var(--pacman-color);
+    text-shadow: 0 0 8px rgba(255, 43, 214, 0.7);
+    font-size: clamp(1.5rem, 4vw, 2.75rem);
+    font-weight: bold;
+    letter-spacing: 6px;
+    margin: 0;
+  }
+
+  .score-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: clamp(0.65rem, 1.6vw, 0.95rem);
+  }
+
+  .score-block.right {
+    align-items: flex-end;
+  }
+
+  .score-label {
+    color: var(--score-label);
+  }
+
+  .score-value {
+    color: var(--hud-text);
+  }
+
+  .lives {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .life {
+    width: clamp(10px, 1.6vw, 16px);
+    height: clamp(10px, 1.6vw, 16px);
+    background: var(--pacman-color);
+    border-radius: 50% 50% 50% 0;
+    clip-path: polygon(100% 74%, 44% 48%, 100% 24%, 100% 0, 0 0, 0 100%, 100% 100%);
+  }
+
+  .maze {
+    display: grid;
+    grid-template-columns: repeat(19, 1fr);
+    grid-template-rows: repeat(21, 1fr);
+    width: min(90vw, 570px);
+    aspect-ratio: 19 / 21;
+    background: var(--bg-color);
+    border: clamp(4px, 1vw, 8px) solid var(--wall-color);
+    box-shadow:
+      0 0 0 2px var(--bg-color) inset,
+      0 0 18px 2px var(--wall-glow);
+    border-radius: 6px;
+    padding: clamp(4px, 1vw, 8px);
+    position: relative;
+  }
+
+  .cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cell.wall {
+    background: var(--wall-color);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+  }
+
+  .dot {
+    width: 18%;
+    height: 18%;
+    min-width: 3px;
+    min-height: 3px;
+    background: var(--dot-color);
+    border-radius: 50%;
+    box-shadow: 0 0 3px rgba(0, 229, 255, 0.8);
+  }
+
+  .pellet {
+    width: 55%;
+    height: 55%;
+    min-width: 6px;
+    min-height: 6px;
+    background: var(--pellet-color);
+    border-radius: 50%;
+    box-shadow: 0 0 6px 2px rgba(255, 140, 0, 0.9);
+    animation: pulse 1s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.75); }
+  }
+
+  .pacman {
+    width: 85%;
+    height: 85%;
+    background: var(--pacman-color);
+    border-radius: 50%;
+    clip-path: polygon(
+      100% 74%, 44% 48%, 100% 24%,
+      100% 0, 0 0, 0 100%, 100% 100%
+    );
+    box-shadow: 0 0 10px 2px rgba(255, 43, 214, 0.8);
+    transform: rotate(0deg);
+  }
+
+  .ghost {
+    width: 88%;
+    height: 88%;
+    position: relative;
+    border-radius: 50% 50% 0 0;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.35);
+  }
+
+  .ghost::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -22%;
+    height: 30%;
+    background: inherit;
+    clip-path: polygon(
+      0% 0%, 100% 0%,
+      100% 100%, 83% 40%, 66% 100%, 50% 40%, 34% 100%, 17% 40%, 0% 100%
+    );
+  }
+
+  .ghost::after {
+    content: "";
+    position: absolute;
+    top: 30%;
+    left: 18%;
+    width: 22%;
+    height: 26%;
+    background: var(--ghost-eye);
+    border-radius: 50%;
+    box-shadow: 32% 0 0 var(--ghost-eye);
+  }
+
+  .ghost-red { background: var(--ghost-1); }
+  .ghost-pink { background: var(--ghost-2); }
+  .ghost-cyan { background: var(--ghost-3); }
+  .ghost-orange { background: var(--ghost-4); }
+
+  .ready {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--ready-color);
+    font-weight: bold;
+    font-size: clamp(0.75rem, 2vw, 1.15rem);
+    letter-spacing: 3px;
+    text-shadow: 0 0 6px rgba(255, 230, 0, 0.85);
+    white-space: nowrap;
+    z-index: 5;
+    animation: blink 1.4s steps(2, jump-none) infinite;
+  }
+
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  .footer-note {
+    color: var(--footer-color);
+    font-size: clamp(0.6rem, 1.3vw, 0.8rem);
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  .cell.path {
+    background: transparent;
+  }
+</style>
+</head>
+<body>
+  <main class="screen" role="img" aria-label="A static decorative Pac-Man arcade screen showing a maze with dots, power pellets, four ghosts, and Pac-Man.">
+    <h1 class="title">PAC&#8209;MAN</h1>
+    <div class="hud">
+      <div class="score-block">
+        <span class="score-label">1UP</span>
+        <span class="score-value">02730</span>
+      </div>
+      <div class="score-block">
+        <span class="score-label">HIGH SCORE</span>
+        <span class="score-value">10000</span>
+      </div>
+      <div class="score-block right">
+        <span class="score-label">2UP</span>
+        <span class="score-value">00000</span>
+      </div>
+    </div>
+
+    <div class="maze">
+      <div class="ready">READY!</div>
+      
+<div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-pellet"><span class="pellet"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-pellet"><span class="pellet"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell path"><span class="ghost ghost-orange"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell path"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell path"><span class="ghost ghost-red"></span></div>
+          <div class="cell path"><span class="ghost ghost-pink"></span></div>
+          <div class="cell path"><span class="ghost ghost-cyan"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell path"><span class="pacman"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell has-pellet"><span class="pellet"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-dot"><span class="dot"></span></div>
+          <div class="cell has-pellet"><span class="pellet"></span></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+          <div class="cell wall"></div>
+    </div>
+
+    <div class="hud">
+      <div class="score-block">
+        <span class="score-label">LIVES</span>
+        <div class="lives">
+          <span class="life"></span>
+          <span class="life"></span>
+          <span class="life"></span>
+        </div>
+      </div>
+      <div class="score-block right">
+        <span class="score-label">LEVEL</span>
+        <span class="score-value">1</span>
+      </div>
+    </div>
+
+    <p class="footer-note">A static, non-interactive tribute screen &mdash; built with only HTML and CSS.</p>
+  </main>
+</body>
+</html>
