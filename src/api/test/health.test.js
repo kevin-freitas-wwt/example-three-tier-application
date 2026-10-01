@@ -41,5 +41,5 @@ test('GET /health returns ok', async (t) => {
 
     const res = await waitForHealth(`http://127.0.0.1:${port}/health`, child, 5000);
     assert.equal(res.status, 200);
-    assert.deepEqual(await res.json(), { status: 'ok' });
+    assert.deepEqual(await res.json(), { status: 'healthy' });
 });
