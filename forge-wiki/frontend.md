@@ -14,8 +14,9 @@ The frontend is a **Next.js 16** application using the **App Router**, **React S
 ```
 src/web/
 ├── app/
-│   ├── layout.tsx      # Root layout with dark mode support
-│   ├── page.tsx        # Home page with task list UI
+│   ├── layout.tsx      # Root layout with metadata and dark mode support
+│   ├── page.tsx        # Home page — Server Component, fetches tasks
+│   ├── TaskList.tsx    # Client Component — all interactive UI
 │   ├── actions.ts      # Server Actions for API calls
 │   ├── globals.css     # Tailwind CSS configuration
 │   └── favicon.ico
@@ -35,29 +36,56 @@ The frontend uses **Next.js Server Actions** to handle data fetching and mutatio
 
 #### `app/actions.ts`
 
-Exports three async functions that fetch from the backend API:
+Exports async functions that fetch from the backend API:
 
 ```typescript
-getTasks(): Promise<Task[]>        // Fetch all tasks
-createTask(formData: FormData)      // Create a new task
-toggleTask(id: number, completed: boolean)  // Update task completion status
+getTasks(): Promise<Task[]>                              // Fetch all tasks
+createTask(formData: FormData)                           // Create a new task
+toggleTask(id: number, completed: boolean)               // Update completion status
+deleteTask(id: number): Promise<void>                    // Delete a task
+updateTaskTitle(id: number, title: string,               // Rename a task
+                originalTitle: string): Promise<void>
 ```
+
+`updateTaskTitle` skips the network call if the trimmed title is empty or identical to the original.
+
+After each mutation, `revalidatePath('/')` refreshes the page data.
 
 #### `app/page.tsx`
 
-The main page component:
-- Fetches all tasks server-side using `getTasks()`
-- Renders a form to add new tasks (calls `createTask` on submit)
-- Displays task list with checkbox to toggle completion
-- Shows progress counter (completed / total)
-- Supports dark mode with Tailwind CSS
+A minimal **Server Component** that:
+- Fetches all tasks server-side with `getTasks()`
+- Passes them to `<TaskList initialTasks={tasks} />` as props
+
+#### `app/TaskList.tsx` — Client Component
+
+`'use client'` component that owns all interactive state:
+
+| Feature | Implementation |
+|---------|---------------|
+| **Optimistic add** | `useOptimistic` shows a faded pending row immediately on submit; input clears before the server round-trip completes |
+| **Filter tabs** | All / Active / Completed pill buttons; active tab has a filled background; tabs are hidden when the list is empty |
+| **Delete button** | `×` button on each row; calls `deleteTask` inside `startTransition`; turns red on hover |
+| **Inline edit** | Clicking a non-completed task title renders a focused `<input>`; Enter or blur commits; Escape cancels |
+| **Keyboard focus ring** | Checkbox button uses `focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2` |
+| **Empty-state illustration** | 📋 emoji + message shown when `visibleTasks.length === 0` (respects active filter) |
+
+### App Metadata
+
+`app/layout.tsx` exports:
+```typescript
+export const metadata: Metadata = {
+  title: 'To-Do List',
+  description: 'A simple task manager.',
+};
+```
 
 ### Styling
 
 - **Tailwind CSS 4** for styling
 - **Dark mode support** via `dark:` class variants
 - **Responsive design** with mobile-first approach
-- **Accessible UI** with semantic HTML and ARIA labels
+- **Accessible UI** with semantic HTML, ARIA labels, and visible focus rings
 
 ### Environment Variables
 
@@ -136,15 +164,16 @@ await fetch(`${API_URL}/tasks`, {
   body: JSON.stringify({ title })
 });
 
-// PATCH /tasks/:id
+// PATCH /tasks/:id  (toggle or rename)
 await fetch(`${API_URL}/tasks/${id}`, {
   method: 'PATCH',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ completed })
+  body: JSON.stringify({ completed })   // or { title }
 });
-```
 
-After each mutation, `revalidatePath('/')` refreshes the page data.
+// DELETE /tasks/:id
+await fetch(`${API_URL}/tasks/${id}`, { method: 'DELETE' });
+```
 
 ## Deployment
 
