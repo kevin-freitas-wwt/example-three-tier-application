@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="t">
+  <title id="t">AI restaurant app icon: plate and cutlery inside a chat bubble</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#4338CA"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <path d="M136 104h240a48 48 0 0 1 48 48v168a48 48 0 0 1-48 48H232l-72 56v-56h-24a48 48 0 0 1-48-48V152a48 48 0 0 1 48-48z" fill="#FFFFFF"/>
+  <circle cx="256" cy="236" r="78" fill="none" stroke="#6D28D9" stroke-width="14"/>
+  <circle cx="256" cy="236" r="46" fill="#EDE9FE"/>
+  <g stroke="#6D28D9" stroke-width="12" stroke-linecap="round">
+    <path d="M150 170v40m-14-40v28m28-28v28m-14 12v90"/>
+    <path d="M362 170v130"/>
+  </g>
+  <path d="M362 170c-20 10-24 50 0 66z" fill="#6D28D9"/>
+</svg>
