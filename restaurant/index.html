@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riverside Burger Co.</title>
+  <meta name="description" content="A neighborhood burger restaurant serving fresh, local burgers daily." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <h1>🍔 Riverside Burger Co.</h1>
+    <p>Fresh, local, and flipped with love — right in your neighborhood.</p>
+  </header>
+
+  <main>
+    <section aria-labelledby="menu-heading">
+      <h2 id="menu-heading">Our Menu</h2>
+      <ul id="menu-list" class="card-list"></ul>
+    </section>
+
+    <section aria-labelledby="hours-heading">
+      <h2 id="hours-heading">Hours</h2>
+      <ul id="hours-list" class="card-list"></ul>
+      <p id="open-status" class="open-status"></p>
+    </section>
+
+    <section aria-labelledby="location-heading">
+      <h2 id="location-heading">Find Us</h2>
+      <div class="card">
+        <p class="card-title">Riverside Burger Co.</p>
+        <p>123 Maple Street, Springfield</p>
+        <p>(555) 867-5309</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p id="footer-year"></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
