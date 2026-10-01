@@ -12,3 +12,10 @@ app store listing image.
 | `icon-fork-neural.svg` | A fork whose tines are connected like a neural network, symbolizing AI-driven menu/ordering intelligence. |
 
 Pick one, or use them as starting points for further refinement in a design tool.
+
+## Usage showcase
+
+Open `showcase-cloche-spark.html` directly in a browser to see
+`icon-cloche-spark.svg` mocked up in several real-world placements: a web
+app header, a browser tab, a mobile home screen, a printed letterhead, a
+business card, an app splash screen, and at several common icon sizes.
