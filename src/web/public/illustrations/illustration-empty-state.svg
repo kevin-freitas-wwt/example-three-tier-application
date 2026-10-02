@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-labelledby="empty-t">
+  <title id="empty-t">Empty state illustration: a bare plate with a small resting AI spark and no food under the cloche</title>
+  <defs>
+    <linearGradient id="empty-dome" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFB08A"/>
+      <stop offset="1" stop-color="#E8847A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- table -->
+  <rect x="40" y="236" width="320" height="14" rx="7" fill="#F3C9A5" opacity="0.6"/>
+  <rect x="60" y="250" width="280" height="10" rx="5" fill="#E7B98D" opacity="0.6"/>
+
+  <!-- plate, empty -->
+  <ellipse cx="200" cy="210" rx="118" ry="20" fill="#FFF7EE"/>
+  <ellipse cx="200" cy="210" rx="78" ry="13" fill="none" stroke="#E7B98D" stroke-width="4" stroke-dasharray="8 10"/>
+
+  <!-- cutlery, set aside, idle -->
+  <rect x="56" y="196" width="8" height="40" rx="4" fill="#D9828A"/>
+  <rect x="336" y="196" width="8" height="40" rx="4" fill="#D9828A"/>
+
+  <!-- cloche lid resting beside the plate, open and empty -->
+  <g transform="translate(300 150)">
+    <path d="M-60 60a60 60 0 0 1 120 0z" fill="url(#empty-dome)" opacity="0.85"/>
+    <circle cx="0" cy="-10" r="8" fill="url(#empty-dome)" opacity="0.85"/>
+    <rect x="-68" y="58" width="136" height="12" rx="6" fill="url(#empty-dome)" opacity="0.85"/>
+  </g>
+
+  <!-- single small dim spark, nothing happening yet -->
+  <path d="M160 150l7 18 18 7-18 7-7 18-7-18-18-7 18-7z" fill="#F0C6B8"/>
+</svg>

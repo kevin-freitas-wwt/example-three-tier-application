@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="t">
+  <title id="t">AI restaurant app icon: chef hat with circuit lines</title>
+  <rect width="512" height="512" rx="112" fill="#14213D"/>
+  <path d="M168 300c-40 0-68-30-68-66s30-66 66-66c8-40 44-70 90-70s82 30 90 70c36 0 66 30 66 66s-28 66-68 66z" fill="#FFFFFF"/>
+  <rect x="168" y="300" width="176" height="96" rx="16" fill="#FFFFFF"/>
+  <g fill="none" stroke="#14B8A6" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M208 396v-48h-24"/>
+    <path d="M256 396v-72"/>
+    <path d="M304 396v-48h24"/>
+  </g>
+  <g fill="#14B8A6">
+    <circle cx="178" cy="348" r="12"/>
+    <circle cx="256" cy="318" r="12"/>
+    <circle cx="334" cy="348" r="12"/>
+  </g>
+</svg>
