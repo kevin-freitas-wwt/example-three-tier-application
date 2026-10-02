@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260">
+  <defs>
+    <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#dddddd"/>
+      <stop offset="100%" stop-color="#e2e2e2"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="260" fill="url(#sky2)"/>
+  <rect x="0" y="170" width="400" height="90" fill="#727272"/>
+  <rect x="0" y="170" width="400" height="4" fill="#d7d7d7"/>
+  <rect x="0" y="214" width="400" height="4" fill="#e7e7e7" stroke-dasharray="12,10"/>
+  <g>
+    <rect x="20" y="190" width="60" height="24" rx="6" fill="#777777"/>
+    <circle cx="35" cy="216" r="7" fill="#282828"/>
+    <circle cx="65" cy="216" r="7" fill="#282828"/>
+  </g>
+  <g>
+    <rect x="120" y="185" width="70" height="26" rx="6" fill="#7a7a7a"/>
+    <circle cx="135" cy="213" r="7" fill="#282828"/>
+    <circle cx="170" cy="213" r="7" fill="#282828"/>
+  </g>
+  <g>
+    <rect x="240" y="192" width="55" height="22" rx="6" fill="#bfbfbf"/>
+    <circle cx="252" cy="216" r="7" fill="#282828"/>
+    <circle cx="280" cy="216" r="7" fill="#282828"/>
+  </g>
+  <g>
+    <rect x="320" y="188" width="60" height="24" rx="6" fill="#898989"/>
+    <circle cx="335" cy="214" r="7" fill="#282828"/>
+    <circle cx="365" cy="214" r="7" fill="#282828"/>
+  </g>
+  <text x="110" y="60" font-size="20" font-family="Comic Sans MS, sans-serif" fill="#414141">HONK!</text>
+  <text x="250" y="100" font-size="16" font-family="Comic Sans MS, sans-serif" fill="#3b3b3b">405</text>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260">
+  <defs>
+    <linearGradient id="sky4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#dbdbdb"/>
+      <stop offset="100%" stop-color="#e9e9e9"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="260" fill="url(#sky4)"/>
+  <circle cx="340" cy="50" r="26" fill="#f4f4f4"/>
+  <rect x="0" y="190" width="400" height="20" fill="#d7d7d7"/>
+  <rect x="0" y="210" width="400" height="50" fill="#9c9c9c"/>
+  <path d="M0,210 Q50,200 100,212 T200,210 T300,214 T400,208" fill="none" stroke="#ffffff" stroke-width="3"/>
+  <g>
+    <circle cx="90" cy="175" r="8" fill="#e2e2e2"/>
+    <line x1="90" y1="183" x2="90" y2="200" stroke="#282828" stroke-width="3"/>
+    <line x1="90" y1="190" x2="75" y2="200" stroke="#282828" stroke-width="3"/>
+    <line x1="90" y1="190" x2="105" y2="183" stroke="#282828" stroke-width="3"/>
+    <ellipse cx="90" cy="203" rx="22" ry="5" fill="#a2a2a2"/>
+    <circle cx="80" cy="206" r="4" fill="#181818"/>
+    <circle cx="100" cy="206" r="4" fill="#181818"/>
+  </g>
+  <g>
+    <circle cx="180" cy="150" r="22" fill="#a7a7a7"/>
+    <circle cx="172" cy="144" r="4" fill="#181818"/>
+    <circle cx="188" cy="144" r="4" fill="#181818"/>
+    <path d="M165,160 Q180,170 195,160" stroke="#181818" stroke-width="2" fill="none"/>
+    <path d="M158,135 L148,110" stroke="#a7a7a7" stroke-width="6" stroke-linecap="round"/>
+    <path d="M202,135 L212,110" stroke="#a7a7a7" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <g>
+    <circle cx="250" cy="178" r="7" fill="#e2e2e2"/>
+    <line x1="250" y1="185" x2="250" y2="200" stroke="#282828" stroke-width="3"/>
+    <line x1="250" y1="192" x2="238" y2="200" stroke="#282828" stroke-width="3"/>
+    <line x1="250" y1="192" x2="262" y2="193" stroke="#282828" stroke-width="3"/>
+    <ellipse cx="250" cy="203" rx="20" ry="4" fill="#a2a2a2"/>
+  </g>
+</svg>

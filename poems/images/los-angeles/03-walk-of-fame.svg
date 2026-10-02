@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260">
+  <defs>
+    <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f4f4f4"/>
+      <stop offset="100%" stop-color="#c6c6c6"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="260" fill="url(#sky3)"/>
+  <polygon points="0,170 60,90 120,170" fill="#6a6a6a"/>
+  <polygon points="80,170 150,80 220,170" fill="#575757"/>
+  <polygon points="190,170 250,95 310,170" fill="#6a6a6a"/>
+  <text x="55" y="120" font-size="22" font-family="Georgia, serif" fill="#ffffff" font-weight="bold">HOLLYWOOD</text>
+  <rect x="0" y="170" width="400" height="90" fill="#535353"/>
+  <g fill="#f4f4f4">
+    <polygon points="40,200 46,215 62,215 50,224 54,239 40,230 26,239 30,224 18,215 34,215" />
+    <polygon points="110,205 116,220 132,220 120,229 124,244 110,235 96,244 100,229 88,220 104,220" />
+    <polygon points="180,200 186,215 202,215 190,224 194,239 180,230 166,239 170,224 158,215 174,215" />
+    <polygon points="250,205 256,220 272,220 260,229 264,244 250,235 236,244 240,229 228,220 244,220" />
+    <polygon points="320,200 326,215 342,215 330,224 334,239 320,230 306,239 310,224 298,215 314,215" />
+  </g>
+  <rect x="0" y="246" width="400" height="4" fill="#d7d7d7"/>
+</svg>
