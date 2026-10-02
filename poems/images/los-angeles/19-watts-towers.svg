@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260">
+  <rect width="400" height="260" fill="#ffffff"/>
+  <rect x="0" y="220" width="400" height="40" fill="#ededed" stroke="#000000" stroke-width="2"/>
+  <g stroke="#000000" stroke-width="2" fill="none">
+    <path d="M150,220 L170,40"/>
+    <path d="M190,220 L180,40"/>
+    <path d="M150,120 L190,110"/>
+    <path d="M150,160 L190,155"/>
+    <path d="M150,200 L190,195"/>
+  </g>
+  <g stroke="#000000" stroke-width="2" fill="none">
+    <path d="M240,220 L255,70"/>
+    <path d="M275,220 L262,70"/>
+    <path d="M240,140 L275,135"/>
+    <path d="M240,180 L275,175"/>
+  </g>
+  <circle cx="165" cy="60" r="4" fill="#000000"/>
+  <circle cx="178" cy="90" r="4" fill="#000000"/>
+  <circle cx="256" cy="90" r="4" fill="#000000"/>
+  <circle cx="266" cy="120" r="4" fill="#000000"/>
+  <text x="110" y="30" font-size="20" font-family="Georgia, serif" fill="#000000" font-weight="bold">Watts Towers</text>
+</svg>

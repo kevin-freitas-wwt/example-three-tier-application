@@ -100,6 +100,41 @@ You hum along softly beneath the hillside.
 
 ![A hand-drawn outdoor amphitheater at the Hollywood Bowl under a starry sky](images/los-angeles/14-hollywood-bowl.svg)
 
+Up on a hill where white buildings gleam white,
+The Getty looks down on the city at night.
+With gardens and fountains and art old and new,
+You can see clear to the ocean's blue-grey view.
+
+![A black-and-white drawing of the Getty Center on its hilltop with gardens](images/los-angeles/16-getty-center.svg)
+
+Downtown there's a market, Grand Central by name,
+With fruit stands and fish stalls, each one just the same —
+Well, not quite the same, there are donuts and more,
+And pupusas and coffee behind every door!
+
+![A black-and-white drawing of the stalls inside Grand Central Market](images/los-angeles/17-grand-central-market.svg)
+
+On Olvera Street, where the papel picado flies,
+The vendors sell trinkets of every size.
+There's mariachi music and churros so sweet,
+On the oldest, the brickiest, liveliest street!
+
+![A black-and-white drawing of Olvera Street with its arched stalls and flags](images/los-angeles/18-olvera-street.svg)
+
+In Watts there are towers all covered in tile,
+Made of bottles and seashells, stacked mile after mile.
+One man built them alone, with his hands and his heart,
+A spiky, spindly, spectacular work of art!
+
+![A black-and-white drawing of the spired, mosaic Watts Towers](images/los-angeles/19-watts-towers.svg)
+
+Out by the airport the jets roar and soar,
+Past a building with legs that reach up to explore.
+It's shaped like a spaceship, all arches and gleam —
+The Theme Building watches each plane like a dream.
+
+![A black-and-white drawing of the arched LAX Theme Building with a jet overhead](images/los-angeles/20-lax-theme-building.svg)
+
 So pack up your sunglasses, flip-flops, and hat,
 And your patience for traffic (you'll need lots of that).
 Oh, the places you'll go! Oh, the things you will see!
