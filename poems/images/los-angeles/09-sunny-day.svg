@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260">
+  <defs>
+    <linearGradient id="sky9" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#fef08a"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="260" fill="url(#sky9)"/>
+  <circle cx="200" cy="100" r="55" fill="#fde047"/>
+  <g stroke="#fde047" stroke-width="6">
+    <line x1="200" y1="20" x2="200" y2="0"/>
+    <line x1="200" y1="180" x2="200" y2="200"/>
+    <line x1="120" y1="100" x2="100" y2="100"/>
+    <line x1="280" y1="100" x2="300" y2="100"/>
+    <line x1="145" y1="45" x2="130" y2="30"/>
+    <line x1="255" y1="45" x2="270" y2="30"/>
+    <line x1="145" y1="155" x2="130" y2="170"/>
+    <line x1="255" y1="155" x2="270" y2="170"/>
+  </g>
+  <circle cx="190" cy="90" r="4" fill="#1f2937"/>
+  <circle cx="215" cy="90" r="4" fill="#1f2937"/>
+  <path d="M180,115 Q200,130 220,115" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <ellipse cx="200" cy="240" rx="200" ry="20" fill="#fcd34d"/>
+  <text x="110" y="235" font-size="14" font-family="Comic Sans MS, sans-serif" fill="#92400e">sunny every single day</text>
+</svg>

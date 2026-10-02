@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260">
+  <defs>
+    <linearGradient id="sky10" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="60%" stop-color="#f472b6"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="260" fill="url(#sky10)"/>
+  <circle cx="200" cy="150" r="50" fill="#fde68a"/>
+  <rect x="0" y="200" width="400" height="60" fill="#1e3a8a"/>
+  <path d="M0,200 Q40,190 80,200 T160,200 T240,200 T320,200 T400,196" fill="none" stroke="#fde68a" stroke-width="3" opacity="0.8"/>
+  <polygon points="0,200 30,170 60,200" fill="#312e81" opacity="0.8"/>
+  <polygon points="40,200 80,160 120,200" fill="#4338ca" opacity="0.8"/>
+  <g transform="translate(150,160)">
+    <circle cx="0" cy="0" r="10" fill="#fde68a"/>
+    <path d="M-10,10 Q0,20 10,10" stroke="#1f2937" stroke-width="2" fill="none"/>
+    <rect x="-6" y="10" width="12" height="16" fill="#be123c"/>
+    <rect x="-14" y="24" width="28" height="6" fill="#1f2937"/>
+    <circle cx="-2" cy="-2" r="1.5" fill="#1f2937"/>
+    <circle cx="4" cy="-2" r="1.5" fill="#1f2937"/>
+  </g>
+  <text x="80" y="90" font-size="22" font-family="Georgia, serif" fill="#ffffff" font-weight="bold">City of Angels</text>
+</svg>
