@@ -1,42 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260">
   <defs>
     <linearGradient id="sky11" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#1e1b4b"/>
-      <stop offset="100%" stop-color="#312e81"/>
+      <stop offset="0%" stop-color="#212121"/>
+      <stop offset="100%" stop-color="#383838"/>
     </linearGradient>
   </defs>
   <rect width="400" height="260" fill="url(#sky11)"/>
-  <circle cx="330" cy="40" r="22" fill="#f3f4f6"/>
-  <rect x="0" y="230" width="400" height="30" fill="#1f2937"/>
+  <circle cx="330" cy="40" r="22" fill="#f4f4f4"/>
+  <rect x="0" y="230" width="400" height="30" fill="#282828"/>
   <g>
     <g transform="translate(30,0)">
-      <rect x="0" y="110" width="6" height="120" fill="#111827"/>
-      <circle cx="3" cy="105" r="14" fill="#fde68a"/>
+      <rect x="0" y="110" width="6" height="120" fill="#181818"/>
+      <circle cx="3" cy="105" r="14" fill="#e2e2e2"/>
     </g>
     <g transform="translate(80,10)">
-      <rect x="0" y="100" width="6" height="130" fill="#111827"/>
-      <circle cx="3" cy="95" r="16" fill="#fde68a"/>
+      <rect x="0" y="100" width="6" height="130" fill="#181818"/>
+      <circle cx="3" cy="95" r="16" fill="#e2e2e2"/>
     </g>
     <g transform="translate(135,0)">
-      <rect x="0" y="110" width="6" height="120" fill="#111827"/>
-      <circle cx="3" cy="105" r="14" fill="#fde68a"/>
+      <rect x="0" y="110" width="6" height="120" fill="#181818"/>
+      <circle cx="3" cy="105" r="14" fill="#e2e2e2"/>
     </g>
     <g transform="translate(190,-5)">
-      <rect x="0" y="95" width="6" height="135" fill="#111827"/>
-      <circle cx="3" cy="90" r="18" fill="#fde68a"/>
+      <rect x="0" y="95" width="6" height="135" fill="#181818"/>
+      <circle cx="3" cy="90" r="18" fill="#e2e2e2"/>
     </g>
     <g transform="translate(245,5)">
-      <rect x="0" y="105" width="6" height="125" fill="#111827"/>
-      <circle cx="3" cy="100" r="15" fill="#fde68a"/>
+      <rect x="0" y="105" width="6" height="125" fill="#181818"/>
+      <circle cx="3" cy="100" r="15" fill="#e2e2e2"/>
     </g>
     <g transform="translate(300,0)">
-      <rect x="0" y="110" width="6" height="120" fill="#111827"/>
-      <circle cx="3" cy="105" r="14" fill="#fde68a"/>
+      <rect x="0" y="110" width="6" height="120" fill="#181818"/>
+      <circle cx="3" cy="105" r="14" fill="#e2e2e2"/>
     </g>
     <g transform="translate(355,10)">
-      <rect x="0" y="100" width="6" height="130" fill="#111827"/>
-      <circle cx="3" cy="95" r="16" fill="#fde68a"/>
+      <rect x="0" y="100" width="6" height="130" fill="#181818"/>
+      <circle cx="3" cy="95" r="16" fill="#e2e2e2"/>
     </g>
   </g>
-  <text x="110" y="30" font-size="16" font-family="Georgia, serif" fill="#fde68a">Urban Light</text>
+  <text x="110" y="30" font-size="16" font-family="Georgia, serif" fill="#e2e2e2">Urban Light</text>
 </svg>

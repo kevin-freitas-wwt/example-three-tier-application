@@ -1,23 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260">
   <defs>
     <linearGradient id="sky7" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#dcfce7"/>
-      <stop offset="100%" stop-color="#fef9c3"/>
+      <stop offset="0%" stop-color="#f0f0f0"/>
+      <stop offset="100%" stop-color="#f4f4f4"/>
     </linearGradient>
   </defs>
   <rect width="400" height="260" fill="url(#sky7)"/>
-  <ellipse cx="200" cy="230" rx="180" ry="30" fill="#86efac"/>
-  <circle cx="90" cy="190" r="30" fill="#4ade80"/>
-  <circle cx="310" cy="195" r="26" fill="#22c55e"/>
-  <circle cx="200" cy="200" r="20" fill="#86efac"/>
+  <ellipse cx="200" cy="230" rx="180" ry="30" fill="#c8c8c8"/>
+  <circle cx="90" cy="190" r="30" fill="#a7a7a7"/>
+  <circle cx="310" cy="195" r="26" fill="#898989"/>
+  <circle cx="200" cy="200" r="20" fill="#c8c8c8"/>
   <g transform="translate(170,120)">
-    <circle cx="30" cy="20" r="22" fill="#fcd34d"/>
-    <circle cx="22" cy="14" r="3" fill="#1f2937"/>
-    <circle cx="38" cy="14" r="3" fill="#1f2937"/>
-    <path d="M20,26 Q30,34 40,26" stroke="#1f2937" stroke-width="2" fill="none"/>
-    <path d="M8,0 Q30,-20 52,0" fill="#fde68a" stroke="#92400e" stroke-width="2"/>
-    <rect x="0" y="40" width="60" height="12" rx="4" fill="#fb923c"/>
+    <circle cx="30" cy="20" r="22" fill="#d0d0d0"/>
+    <circle cx="22" cy="14" r="3" fill="#282828"/>
+    <circle cx="38" cy="14" r="3" fill="#282828"/>
+    <path d="M20,26 Q30,34 40,26" stroke="#282828" stroke-width="2" fill="none"/>
+    <path d="M8,0 Q30,-20 52,0" fill="#e2e2e2" stroke="#535353" stroke-width="2"/>
+    <rect x="0" y="40" width="60" height="12" rx="4" fill="#a8a8a8"/>
   </g>
-  <text x="130" y="70" font-size="16" font-family="Comic Sans MS, sans-serif" fill="#166534">Echo Park</text>
-  <text x="230" y="90" font-size="16" font-family="Comic Sans MS, sans-serif" fill="#166534">Silver Lake</text>
+  <text x="130" y="70" font-size="16" font-family="Comic Sans MS, sans-serif" fill="#484848">Echo Park</text>
+  <text x="230" y="90" font-size="16" font-family="Comic Sans MS, sans-serif" fill="#484848">Silver Lake</text>
 </svg>
