@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-labelledby="welcome-t">
+  <title id="welcome-t">Welcome illustration: a serving cloche lifting off a plate with an AI spark</title>
+  <defs>
+    <linearGradient id="welcome-dome" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF7A45"/>
+      <stop offset="1" stop-color="#D9363E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- table -->
+  <rect x="40" y="236" width="320" height="14" rx="7" fill="#F3C9A5"/>
+  <rect x="60" y="250" width="280" height="10" rx="5" fill="#E7B98D"/>
+
+  <!-- plate -->
+  <ellipse cx="200" cy="238" rx="118" ry="20" fill="#FFF7EE"/>
+  <ellipse cx="200" cy="236" rx="118" ry="18" fill="#FFFFFF" opacity="0.6"/>
+
+  <!-- cutlery -->
+  <rect x="56" y="222" width="8" height="40" rx="4" fill="#D9363E"/>
+  <rect x="336" y="222" width="8" height="40" rx="4" fill="#D9363E"/>
+
+  <!-- cloche lid, lifted and tilted to reveal food -->
+  <g transform="translate(236 70) rotate(-14)">
+    <path d="M-96 100a96 96 0 0 1 192 0z" fill="url(#welcome-dome)"/>
+    <circle cx="0" cy="-18" r="12" fill="url(#welcome-dome)"/>
+    <rect x="-110" y="96" width="220" height="18" rx="9" fill="url(#welcome-dome)"/>
+  </g>
+
+  <!-- revealed food on the plate -->
+  <circle cx="150" cy="214" r="22" fill="#FF7A45"/>
+  <circle cx="150" cy="214" r="22" fill="#FFF7EE" opacity="0.18"/>
+
+  <!-- steam -->
+  <path d="M136 170c-8-10 8-18 0-30" stroke="#FFF7EE" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M158 164c-8-10 8-18 0-30" stroke="#FFF7EE" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+  <!-- AI spark -->
+  <path d="M300 60l12 32 32 12-32 12-12 32-12-32-32-12 32-12z" fill="#D9363E"/>
+  <path d="M300 60l12 32 32 12-32 12-12 32-12-32-32-12 32-12z" fill="#FF7A45" opacity="0.55"/>
+  <path d="M330 44l6 14 14 6-14 6-6 14-6-14-14-6 14-6z" fill="#FF7A45"/>
+</svg>

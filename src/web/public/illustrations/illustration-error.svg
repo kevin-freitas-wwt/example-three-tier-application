@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-labelledby="error-t">
+  <title id="error-t">Error illustration: a tipped-over cloche with a spilled plate and a warning badge</title>
+  <defs>
+    <linearGradient id="error-dome" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF7A45"/>
+      <stop offset="1" stop-color="#D9363E"/>
+    </linearGradient>
+    <linearGradient id="error-badge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#D9363E"/>
+      <stop offset="1" stop-color="#8E2430"/>
+    </linearGradient>
+  </defs>
+
+  <!-- table -->
+  <rect x="40" y="236" width="320" height="14" rx="7" fill="#F3C9A5"/>
+  <rect x="60" y="250" width="280" height="10" rx="5" fill="#E7B98D"/>
+
+  <!-- tipped plate -->
+  <g transform="rotate(-8 200 222)">
+    <ellipse cx="200" cy="222" rx="112" ry="19" fill="#FFF7EE"/>
+  </g>
+
+  <!-- spilled bits scattered off the plate -->
+  <circle cx="296" cy="238" r="7" fill="#D9363E"/>
+  <circle cx="312" cy="226" r="4.5" fill="#FF7A45"/>
+  <circle cx="78" cy="236" r="5" fill="#D9363E"/>
+
+  <!-- fallen cutlery -->
+  <rect x="52" y="214" width="8" height="38" rx="4" fill="#D9363E" transform="rotate(18 56 233)"/>
+
+  <!-- cloche lid, knocked over on its side -->
+  <g transform="translate(150 150) rotate(96)">
+    <path d="M-70 74a70 70 0 0 1 140 0z" fill="url(#error-dome)"/>
+    <circle cx="0" cy="-12" r="9" fill="url(#error-dome)"/>
+    <rect x="-78" y="70" width="156" height="13" rx="6.5" fill="url(#error-dome)"/>
+  </g>
+
+  <!-- warning badge -->
+  <circle cx="296" cy="110" r="46" fill="url(#error-badge)"/>
+  <rect x="291" y="86" width="10" height="38" rx="5" fill="#FFF7EE"/>
+  <circle cx="296" cy="134" r="6" fill="#FFF7EE"/>
+</svg>
