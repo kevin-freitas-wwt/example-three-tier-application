@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260">
+  <defs>
+    <linearGradient id="sky14" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#4c1d95"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="260" fill="url(#sky14)"/>
+  <circle cx="60" cy="30" r="2" fill="#fff"/>
+  <circle cx="140" cy="20" r="2" fill="#fff"/>
+  <circle cx="260" cy="25" r="2" fill="#fff"/>
+  <circle cx="330" cy="45" r="2" fill="#fff"/>
+  <circle cx="200" cy="15" r="2" fill="#fff"/>
+  <path d="M50,170 A150,90 0 0 1 350,170 Z" fill="#78350f"/>
+  <path d="M80,170 A120,70 0 0 1 320,170 Z" fill="#92400e"/>
+  <g fill="#fde047">
+    <circle cx="120" cy="160" r="3"/>
+    <circle cx="150" cy="150" r="3"/>
+    <circle cx="180" cy="145" r="3"/>
+    <circle cx="220" cy="145" r="3"/>
+    <circle cx="250" cy="150" r="3"/>
+    <circle cx="280" cy="160" r="3"/>
+  </g>
+  <rect x="170" y="200" width="60" height="40" fill="#1f2937"/>
+  <ellipse cx="200" cy="200" rx="30" ry="10" fill="#111827"/>
+  <text x="130" y="40" font-size="16" font-family="Georgia, serif" fill="#fde68a">Hollywood Bowl</text>
+</svg>

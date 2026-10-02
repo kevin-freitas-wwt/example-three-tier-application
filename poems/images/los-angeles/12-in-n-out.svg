@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" width="400" height="260">
+  <defs>
+    <linearGradient id="sky12" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#fca5a5"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="260" fill="url(#sky12)"/>
+  <rect x="0" y="200" width="400" height="60" fill="#d4d4d8"/>
+  <rect x="60" y="110" width="200" height="90" fill="#f8fafc" stroke="#dc2626" stroke-width="4"/>
+  <rect x="60" y="100" width="200" height="20" fill="#dc2626"/>
+  <polygon points="150,30 180,100 120,100" fill="#facc15" stroke="#dc2626" stroke-width="3"/>
+  <text x="95" y="150" font-size="16" font-family="Comic Sans MS, sans-serif" fill="#dc2626" font-weight="bold">IN-N-OUT</text>
+  <rect x="300" y="150" width="60" height="40" rx="6" fill="#2563eb"/>
+  <circle cx="312" cy="192" r="8" fill="#1f2937"/>
+  <circle cx="348" cy="192" r="8" fill="#1f2937"/>
+  <g transform="translate(20,160)">
+    <ellipse cx="20" cy="40" rx="24" ry="8" fill="#d6d3d1"/>
+    <ellipse cx="20" cy="30" rx="20" ry="7" fill="#92400e"/>
+    <ellipse cx="20" cy="22" rx="18" ry="6" fill="#fcd34d"/>
+    <ellipse cx="20" cy="14" rx="20" ry="7" fill="#16a34a"/>
+    <ellipse cx="20" cy="6" rx="18" ry="6" fill="#f8fafc"/>
+  </g>
+</svg>

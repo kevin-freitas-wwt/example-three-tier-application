@@ -65,9 +65,44 @@ And the sunsets are purple and orange and glad.
 
 ![A hand-drawn smiling sun shining over a golden landscape](images/los-angeles/09-sunny-day.svg)
 
+Down in the Downtown the tall towers rise,
+Reflecting the sunset in gold-colored skies.
+A little old train car named Angels in Flight
+Climbs up Bunker Hill with a creak, left and right.
+
+![A hand-drawn downtown skyline with the Angels Flight railway car](images/los-angeles/10-downtown.svg)
+
+At night in a museum, where art likes to play,
+A hundred bright lampposts all glow till it's day.
+They stand in neat rows like a tall metal choir —
+That's Urban Light, dear, all aglow and afire!
+
+![A hand-drawn row of glowing lampposts from the Urban Light art installation](images/los-angeles/11-urban-light.svg)
+
+Would you like a burger? One Double-Double, please?
+Animal style, with the sauce and the cheese?
+In a red and white building, with palm trees in view,
+In-N-Out serves them — would you like one or two?
+
+![A hand-drawn In-N-Out burger stand with a drive-thru and palm trees](images/los-angeles/12-in-n-out.svg)
+
+Way out in Malibu the waves curl up tall,
+And a surfer named Sam catches each and all.
+He paddles, he pops up, he rides to the shore,
+Then paddles right back out to catch one wave more!
+
+![A hand-drawn surfer riding a wave off the Malibu coastline](images/los-angeles/13-malibu-surfing.svg)
+
+Under the stars at the Hollywood Bowl,
+The music plays sweet and the violins roll.
+With a picnic basket and blanket spread wide,
+You hum along softly beneath the hillside.
+
+![A hand-drawn outdoor amphitheater at the Hollywood Bowl under a starry sky](images/los-angeles/14-hollywood-bowl.svg)
+
 So pack up your sunglasses, flip-flops, and hat,
 And your patience for traffic (you'll need lots of that).
 Oh, the places you'll go! Oh, the things you will see!
 In the City of Angels — L.A., by the sea!
 
-![A hand-drawn sunset over the ocean with the words City of Angels](images/los-angeles/10-sunset-goodbye.svg)
+![A hand-drawn sunset over the ocean with the words City of Angels](images/los-angeles/15-sunset-goodbye.svg)
