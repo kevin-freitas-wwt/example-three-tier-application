@@ -13,9 +13,11 @@ Data sources (all public):
   - Grocery/food retailer locations: USDA SNAP historical retailer
     locator dataset, maintained at https://github.com/jshannon75/snap_retailers
     (hist_snap_retailer_final2022.csv). Only currently-authorized
-    (no end_date) stores in grocery-related categories are plotted:
-    Supermarket, Super Store, Large/Medium/Small Grocery Store,
-    Combination Grocery/Other.
+    (no end_date) stores in actual grocery categories are plotted:
+    Supermarket, Super Store, Large/Medium/Small Grocery Store.
+    "Combination Grocery/Other" (e.g. pharmacies, dollar stores, and other
+    small retailers that also sell some food) is deliberately excluded,
+    since those are not grocery stores.
 
 The script downloads these files into ./cache (gitignored) on first run,
 then renders a single PNG at 3840x2160 (4K) to the given output path.
@@ -47,17 +49,23 @@ SNAP_RETAILERS_ZIP_URL = (
     "hist_snap_retailer_final2022_csv.zip"
 )
 
+# Only genuine grocery stores. "Combination Grocery/Other" is excluded on
+# purpose: USDA uses that category for small retailers (pharmacies, dollar
+# stores, etc.) that sell some food but are not grocery stores.
 GROCERY_STORE_TYPES = {
     "Supermarket",
     "Super Store",
     "Large Grocery Store",
     "Medium Grocery Store",
     "Small Grocery Store",
-    "Combination Grocery/Other",
 }
 
 TARGET_COUNTY = "King County"
 TARGET_STATE = "WA"
+
+# Degrees of padding added around the data extent so points/polygons at the
+# edge of the data are not clipped by the axis limits.
+MAP_PADDING_DEGREES = 0.03
 
 
 def _download(url, dest):
@@ -90,6 +98,21 @@ def load_income_by_zip():
     ).fetchall()
     conn.close()
     return {z: income for z, income in rows}
+
+
+def load_all_king_zip_codes():
+    path = os.path.join(CACHE_DIR, "simple_db.sqlite")
+    _download(INCOME_DB_URL, path)
+    conn = sqlite3.connect(path)
+    zips = {
+        row[0]
+        for row in conn.execute(
+            "SELECT zipcode FROM simple_zipcode WHERE county=? AND state=?",
+            (TARGET_COUNTY, TARGET_STATE),
+        )
+    }
+    conn.close()
+    return zips
 
 
 def load_grocery_stores():
@@ -127,6 +150,37 @@ def load_grocery_stores():
     return stores
 
 
+def _iter_rings(geometry):
+    gtype = geometry["type"]
+    coords = geometry["coordinates"]
+    if gtype == "Polygon":
+        yield coords[0]
+    elif gtype == "MultiPolygon":
+        for poly in coords:
+            yield poly[0]
+
+
+def _data_bounds(features, stores):
+    """Compute the lon/lat bounding box covering every zip polygon vertex
+    and every store point, so nothing is clipped by the axis limits."""
+    minx = miny = float("inf")
+    maxx = maxy = float("-inf")
+    for feat in features:
+        for ring in _iter_rings(feat["geometry"]):
+            for x, y in ring:
+                minx, maxx = min(minx, x), max(maxx, x)
+                miny, maxy = min(miny, y), max(maxy, y)
+    for s in stores:
+        minx, maxx = min(minx, s["lon"]), max(maxx, s["lon"])
+        miny, maxy = min(miny, s["lat"]), max(maxy, s["lat"])
+    return (
+        minx - MAP_PADDING_DEGREES,
+        maxx + MAP_PADDING_DEGREES,
+        miny - MAP_PADDING_DEGREES,
+        maxy + MAP_PADDING_DEGREES,
+    )
+
+
 def main():
     out_path = sys.argv[1] if len(sys.argv) > 1 else "grocery_stores_income_map.png"
 
@@ -141,23 +195,11 @@ def main():
 
     geo = load_zip_boundaries()
     income_by_zip = load_income_by_zip()
+    all_king_zips = load_all_king_zip_codes()
     stores = load_grocery_stores()
 
-    king_zip_codes = set(income_by_zip.keys())
-
-    # Also include King County zips that have no income figure, so the
-    # boundary still draws (shown in grey) for visual continuity.
-    all_king_zips_path = os.path.join(CACHE_DIR, "simple_db.sqlite")
-    conn = sqlite3.connect(all_king_zips_path)
-    all_king_zips = {
-        row[0]
-        for row in conn.execute(
-            "SELECT zipcode FROM simple_zipcode WHERE county=? AND state=?",
-            (TARGET_COUNTY, TARGET_STATE),
-        )
-    }
-    conn.close()
-
+    # Include King County zips with no income figure too, so the boundary
+    # still draws (shown in grey) for visual continuity.
     features = [
         feat
         for feat in geo["features"]
@@ -165,6 +207,19 @@ def main():
     ]
     print(f"Zip boundaries matched: {len(features)}", file=sys.stderr)
     print(f"Grocery stores plotted: {len(stores)}", file=sys.stderr)
+
+    xmin, xmax, ymin, ymax = _data_bounds(features, stores)
+    out_of_frame = [
+        s
+        for s in stores
+        if not (xmin <= s["lon"] <= xmax and ymin <= s["lat"] <= ymax)
+    ]
+    if out_of_frame:
+        print(
+            f"WARNING: {len(out_of_frame)} store(s) fall outside the computed "
+            "map frame and would be clipped",
+            file=sys.stderr,
+        )
 
     incomes = [v for v in income_by_zip.values() if v]
     norm = Normalize(vmin=min(incomes), vmax=max(incomes))
@@ -175,22 +230,13 @@ def main():
     fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=dpi)
     fig.patch.set_facecolor("white")
 
-    def iter_rings(geometry):
-        gtype = geometry["type"]
-        coords = geometry["coordinates"]
-        if gtype == "Polygon":
-            yield coords[0]
-        elif gtype == "MultiPolygon":
-            for poly in coords:
-                yield poly[0]
-
     patches = []
     colors = []
     for feat in features:
         zc = feat["properties"]["ZCTA5CE10"]
         income = income_by_zip.get(zc)
         color = sm.to_rgba(income) if income else (0.85, 0.85, 0.85, 1.0)
-        for ring in iter_rings(feat["geometry"]):
+        for ring in _iter_rings(feat["geometry"]):
             patches.append(MplPolygon(ring, closed=True))
             colors.append(color)
 
@@ -203,7 +249,6 @@ def main():
         "Large Grocery Store": "#17becf",
         "Medium Grocery Store": "#2ca02c",
         "Small Grocery Store": "#8c564b",
-        "Combination Grocery/Other": "#e377c2",
     }
     by_type = {}
     for s in stores:
@@ -223,8 +268,8 @@ def main():
             zorder=3,
         )
 
-    ax.set_xlim(-122.55, -121.6)
-    ax.set_ylim(47.1, 47.85)
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymin, ymax)
     ax.set_aspect(1.4)
     ax.set_xticks([])
     ax.set_yticks([])

@@ -2,9 +2,11 @@
 
 `generate_map.py` builds a single 4K (3840x2160) PNG that shows:
 
-- Every currently SNAP-authorized grocery-type retailer in King County, WA
+- Every currently SNAP-authorized grocery store in King County, WA
   (supermarkets, super stores, and large/medium/small grocery stores), plotted
-  as points colored by store type.
+  as points colored by store type. USDA's "Combination Grocery/Other"
+  category (pharmacies, dollar stores, and other small retailers that sell
+  some food) is intentionally excluded, since those aren't grocery stores.
 - A choropleth of median household income by zip code (ZCTA) across King
   County, from US Census ACS data.
 
@@ -18,6 +20,10 @@
 
 All three are public datasets fetched over HTTPS. Downloaded files are cached
 under `cache/` (gitignored) so re-running the script doesn't re-download them.
+
+The map's axis limits are computed automatically from the actual extent of
+the zip boundaries and store points (plus a small margin), so nothing is cut
+off at the edge of the picture.
 
 ## Usage
 
