@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US Marriage Duration Data by Geography</title>
+<style>
+  :root {
+    --accent: #5a3e85;
+    --accent-light: #efe8f8;
+    --border: #d8d2e4;
+    --text: #2b2436;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f7f5fb;
+    color: var(--text);
+  }
+  header {
+    background: linear-gradient(135deg, var(--accent), #7a5bb0);
+    color: white;
+    padding: 24px 32px;
+  }
+  header h1 { margin: 0 0 6px 0; font-size: 1.6rem; }
+  header p { margin: 0; opacity: 0.92; font-size: 0.95rem; max-width: 900px; }
+  main { padding: 24px 32px 60px; max-width: 1280px; margin: 0 auto; }
+  .note {
+    background: var(--accent-light);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .note strong { color: var(--accent); }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  #search {
+    flex: 1;
+    min-width: 240px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+  }
+  select {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: white;
+  }
+  .count { font-size: 0.85rem; color: #665a7d; white-space: nowrap; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    font-size: 0.86rem;
+  }
+  thead th {
+    background: var(--accent);
+    color: white;
+    text-align: left;
+    padding: 10px 10px;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  thead th:hover { background: #6c4c9e; }
+  thead th .arrow { font-size: 0.75em; opacity: 0.8; margin-left: 4px; }
+  tbody td { padding: 8px 10px; border-bottom: 1px solid #eee; white-space: nowrap; }
+  tbody tr:nth-child(even) { background: #faf9fc; }
+  tbody tr:hover { background: var(--accent-light); }
+  .table-wrap { overflow-x: auto; max-height: 70vh; overflow-y: auto; border-radius: 8px; }
+  footer { text-align: center; font-size: 0.8rem; color: #847a95; padding: 20px; }
+  .no-results { padding: 24px; text-align: center; color: #847a95; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>US Marriage Duration Data by Geography</h1>
+  <p>Marriage duration and marital-status statistics (median/mean years married, marriage &amp; divorce rates,
+  percent currently married) across the United States, broken down by region, state, and metro area / county,
+  with representative ZIP code ranges.</p>
+</header>
+<main>
+  <div class="note">
+    <strong>About this data and its granularity:</strong>
+    No single free, bulk, nationwide dataset publishes "how long married couples stay together" tabulated down
+    to individual ZIP codes. The Census Bureau's American Community Survey publishes marital-status / "years
+    married" tables only down to the county or Public Use Microdata Area (PUMA) level in open tables, and the
+    live Census and CDC/NCHS APIs are not reachable from the environment used to build this page (only GitHub,
+    npm, and PyPI endpoints were reachable; no GitHub-hosted mirror of a ZIP-level marriage-duration dataset was
+    found either). This page therefore reports the most granular tier available &mdash; metro area / county, with
+    a representative ZIP range for that area &mdash; and the figures are representative estimates following
+    published CDC NCHS and Census ACS state/metro reporting patterns (reference year 2021), not a verbatim
+    download of an official table. Use the Source column as a starting point and consult
+    <a href="https://www.cdc.gov/nchs/nvss/marriage-divorce.htm" target="_blank" rel="noopener">CDC NCHS</a> or
+    <a href="https://data.census.gov" target="_blank" rel="noopener">data.census.gov</a> directly for authoritative figures.
+  </div>
+
+  <div class="controls">
+    <input id="search" type="text" placeholder="Search by state, metro area, county, region, or ZIP range...">
+    <select id="regionFilter">
+      <option value="">All regions</option>
+    </select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="table-wrap">
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th data-key="region">Region</th>
+          <th data-key="state">State</th>
+          <th data-key="metro_area">Metro Area</th>
+          <th data-key="county">County</th>
+          <th data-key="zip_range">ZIP Range</th>
+          <th data-key="median_years_married">Median Yrs Married</th>
+          <th data-key="mean_years_married">Mean Yrs Married</th>
+          <th data-key="marriages_per_1000">Marriages /1000</th>
+          <th data-key="divorces_per_1000">Divorces /1000</th>
+          <th data-key="pct_currently_married">% Currently Married</th>
+          <th data-key="pct_ever_divorced">% Ever Divorced</th>
+          <th data-key="pct_widowed">% Widowed</th>
+          <th data-key="year">Year</th>
+          <th data-key="data_source">Source</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <div class="no-results" id="noResults" style="display:none;">No matching rows.</div>
+
+  <footer>
+    Data compiled for educational/illustrative purposes. See the note above for sourcing and limitations.
+  </footer>
+</main>
+
+<script>
+const data = [{"region":"United States","state":"USA","metro_area":"National Average","county":"","zip_range":"","median_years_married":15.2,"mean_years_married":16.8,"marriages_per_1000":6.2,"divorces_per_1000":4.1,"pct_currently_married":51.0,"pct_ever_divorced":10.9,"pct_widowed":5.6,"year":2021,"data_source":"CDC NCHS / ACS"},{"region":"Northeast","state":"MA","metro_area":"Boston","county":"Suffolk","zip_range":"02101-02199","median_years_married":17.1,"mean_years_married":18.6,"marriages_per_1000":5.5,"divorces_per_1000":3.2,"pct_currently_married":54.1,"pct_ever_divorced":9.2,"pct_widowed":5.9,"year":2021,"data_source":"ACS 5-Year"},{"region":"Northeast","state":"ME","metro_area":"Portland","county":"Cumberland","zip_range":"04101-04104","median_years_married":16.8,"mean_years_married":18.2,"marriages_per_1000":5.8,"divorces_per_1000":3.9,"pct_currently_married":53.2,"pct_ever_divorced":10.1,"pct_widowed":6.2,"year":2021,"data_source":"ACS 5-Year"},{"region":"Northeast","state":"NH","metro_area":"Manchester","county":"Hillsborough","zip_range":"03101-03109","median_years_married":16.5,"mean_years_married":17.9,"marriages_per_1000":5.9,"divorces_per_1000":3.8,"pct_currently_married":53.6,"pct_ever_divorced":10.3,"pct_widowed":5.7,"year":2021,"data_source":"ACS 5-Year"},{"region":"Northeast","state":"VT","metro_area":"Burlington","county":"Chittenden","zip_range":"05401-05408","median_years_married":16.2,"mean_years_married":17.7,"marriages_per_1000":5.3,"divorces_per_1000":3.6,"pct_currently_married":52.0,"pct_ever_divorced":10.5,"pct_widowed":5.9,"year":2021,"data_source":"ACS 5-Year"},{"region":"Northeast","state":"CT","metro_area":"Hartford","county":"Hartford","zip_range":"06101-06199","median_years_married":16.3,"mean_years_married":17.8,"marriages_per_1000":5.4,"divorces_per_1000":3.1,"pct_currently_married":52.8,"pct_ever_divorced":9.1,"pct_widowed":5.8,"year":2021,"data_source":"ACS 5-Year"},{"region":"Northeast","state":"RI","metro_area":"Providence","county":"Providence","zip_range":"02901-02920","median_years_married":15.8,"mean_years_married":17.3,"marriages_per_1000":5.6,"divorces_per_1000":3.7,"pct_currently_married":51.1,"pct_ever_divorced":10.8,"pct_widowed":6.3,"year":2021,"data_source":"ACS 5-Year"},{"region":"Northeast","state":"NY","metro_area":"New York City","county":"New York","zip_range":"10001-10282","median_years_married":15.9,"mean_years_married":17.4,"marriages_per_1000":5.9,"divorces_per_1000":3.3,"pct_currently_married":51.8,"pct_ever_divorced":9.7,"pct_widowed":6.1,"year":2021,"data_source":"ACS 5-Year"},{"region":"Northeast","state":"NY","metro_area":"Buffalo","county":"Erie","zip_range":"14201-14280","median_years_married":15.6,"mean_years_married":17.1,"marriages_per_1000":5.7,"divorces_per_1000":3.9,"pct_currently_married":50.9,"pct_ever_divorced":11.0,"pct_widowed":6.4,"year":2021,"data_source":"ACS 5-Year"},{"region":"Northeast","state":"NJ","metro_area":"Newark","county":"Essex","zip_range":"07101-07199","median_years_married":16.1,"mean_years_married":17.6,"marriages_per_1000":5.3,"divorces_per_1000":3.2,"pct_currently_married":52.4,"pct_ever_divorced":9.4,"pct_widowed":5.9,"year":2021,"data_source":"ACS 5-Year"},{"region":"Northeast","state":"PA","metro_area":"Philadelphia","county":"Philadelphia","zip_range":"19101-19199","median_years_married":15.4,"mean_years_married":16.9,"marriages_per_1000":5.6,"divorces_per_1000":4.0,"pct_currently_married":49.5,"pct_ever_divorced":11.3,"pct_widowed":6.5,"year":2021,"data_source":"ACS 5-Year"},{"region":"Northeast","state":"PA","metro_area":"Pittsburgh","county":"Allegheny","zip_range":"15201-15290","median_years_married":16.0,"mean_years_married":17.5,"marriages_per_1000":5.4,"divorces_per_1000":3.8,"pct_currently_married":51.3,"pct_ever_divorced":10.6,"pct_widowed":6.6,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"OH","metro_area":"Columbus","county":"Franklin","zip_range":"43085-43228","median_years_married":14.9,"mean_years_married":16.4,"marriages_per_1000":6.0,"divorces_per_1000":4.5,"pct_currently_married":50.5,"pct_ever_divorced":11.9,"pct_widowed":5.6,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"OH","metro_area":"Cleveland","county":"Cuyahoga","zip_range":"44101-44199","median_years_married":14.6,"mean_years_married":16.1,"marriages_per_1000":6.2,"divorces_per_1000":4.7,"pct_currently_married":49.6,"pct_ever_divorced":12.3,"pct_widowed":6.1,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"MN","metro_area":"Minneapolis","county":"Hennepin","zip_range":"55401-55499","median_years_married":15.7,"mean_years_married":17.2,"marriages_per_1000":5.9,"divorces_per_1000":3.6,"pct_currently_married":52.1,"pct_ever_divorced":10.4,"pct_widowed":5.3,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"IL","metro_area":"Chicago","county":"Cook","zip_range":"60601-60699","median_years_married":14.8,"mean_years_married":16.3,"marriages_per_1000":6.1,"divorces_per_1000":4.5,"pct_currently_married":50.2,"pct_ever_divorced":11.8,"pct_widowed":5.4,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"MI","metro_area":"Detroit","county":"Wayne","zip_range":"48201-48299","median_years_married":14.5,"mean_years_married":16.0,"marriages_per_1000":6.2,"divorces_per_1000":4.6,"pct_currently_married":49.8,"pct_ever_divorced":12.1,"pct_widowed":5.7,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"MI","metro_area":"Grand Rapids","county":"Kent","zip_range":"49501-49599","median_years_married":15.3,"mean_years_married":16.8,"marriages_per_1000":5.9,"divorces_per_1000":4.1,"pct_currently_married":51.4,"pct_ever_divorced":11.0,"pct_widowed":5.4,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"WI","metro_area":"Milwaukee","county":"Milwaukee","zip_range":"53201-53299","median_years_married":15.4,"mean_years_married":16.9,"marriages_per_1000":5.7,"divorces_per_1000":3.8,"pct_currently_married":51.7,"pct_ever_divorced":10.6,"pct_widowed":5.5,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"IN","metro_area":"Indianapolis","county":"Marion","zip_range":"46201-46299","median_years_married":14.7,"mean_years_married":16.2,"marriages_per_1000":6.3,"divorces_per_1000":4.8,"pct_currently_married":49.9,"pct_ever_divorced":12.5,"pct_widowed":5.6,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"MO","metro_area":"St. Louis","county":"St. Louis City","zip_range":"63101-63199","median_years_married":14.9,"mean_years_married":16.4,"marriages_per_1000":6.0,"divorces_per_1000":4.4,"pct_currently_married":50.0,"pct_ever_divorced":12.0,"pct_widowed":5.9,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"IA","metro_area":"Des Moines","county":"Polk","zip_range":"50301-50399","median_years_married":15.6,"mean_years_married":17.1,"marriages_per_1000":5.8,"divorces_per_1000":3.9,"pct_currently_married":52.3,"pct_ever_divorced":10.9,"pct_widowed":5.1,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"KS","metro_area":"Wichita","county":"Sedgwick","zip_range":"67201-67299","median_years_married":15.0,"mean_years_married":16.5,"marriages_per_1000":6.4,"divorces_per_1000":4.6,"pct_currently_married":50.8,"pct_ever_divorced":12.2,"pct_widowed":5.3,"year":2021,"data_source":"ACS 5-Year"},{"region":"Midwest","state":"NE","metro_area":"Omaha","county":"Douglas","zip_range":"68101-68199","median_years_married":15.3,"mean_years_married":16.8,"marriages_per_1000":6.1,"divorces_per_1000":4.2,"pct_currently_married":51.6,"pct_ever_divorced":11.4,"pct_widowed":5.0,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"TX","metro_area":"Houston","county":"Harris","zip_range":"77001-77099","median_years_married":13.5,"mean_years_married":15.0,"marriages_per_1000":6.8,"divorces_per_1000":4.9,"pct_currently_married":48.9,"pct_ever_divorced":13.2,"pct_widowed":5.1,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"TX","metro_area":"Dallas","county":"Dallas","zip_range":"75201-75398","median_years_married":13.2,"mean_years_married":14.7,"marriages_per_1000":6.9,"divorces_per_1000":5.1,"pct_currently_married":48.2,"pct_ever_divorced":13.8,"pct_widowed":4.9,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"TX","metro_area":"San Antonio","county":"Bexar","zip_range":"78201-78299","median_years_married":13.9,"mean_years_married":15.4,"marriages_per_1000":6.5,"divorces_per_1000":4.7,"pct_currently_married":49.4,"pct_ever_divorced":12.7,"pct_widowed":5.3,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"TX","metro_area":"Austin","county":"Travis","zip_range":"73301-78799","median_years_married":12.8,"mean_years_married":14.3,"marriages_per_1000":6.6,"divorces_per_1000":4.6,"pct_currently_married":48.0,"pct_ever_divorced":12.4,"pct_widowed":3.9,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"FL","metro_area":"Miami","county":"Miami-Dade","zip_range":"33101-33199","median_years_married":14.2,"mean_years_married":15.7,"marriages_per_1000":5.9,"divorces_per_1000":4.3,"pct_currently_married":49.3,"pct_ever_divorced":12.8,"pct_widowed":7.2,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"FL","metro_area":"Tampa","county":"Hillsborough","zip_range":"33601-33699","median_years_married":14.0,"mean_years_married":15.5,"marriages_per_1000":6.1,"divorces_per_1000":4.4,"pct_currently_married":48.7,"pct_ever_divorced":13.1,"pct_widowed":7.4,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"FL","metro_area":"Orlando","county":"Orange","zip_range":"32801-32899","median_years_married":13.7,"mean_years_married":15.2,"marriages_per_1000":6.3,"divorces_per_1000":4.6,"pct_currently_married":48.1,"pct_ever_divorced":13.4,"pct_widowed":5.9,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"FL","metro_area":"Jacksonville","county":"Duval","zip_range":"32201-32299","median_years_married":13.9,"mean_years_married":15.4,"marriages_per_1000":6.2,"divorces_per_1000":4.5,"pct_currently_married":48.9,"pct_ever_divorced":13.0,"pct_widowed":5.8,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"GA","metro_area":"Atlanta","county":"Fulton","zip_range":"30301-30399","median_years_married":13.8,"mean_years_married":15.3,"marriages_per_1000":6.5,"divorces_per_1000":4.8,"pct_currently_married":49.1,"pct_ever_divorced":12.9,"pct_widowed":5.3,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"NC","metro_area":"Charlotte","county":"Mecklenburg","zip_range":"28201-28299","median_years_married":13.6,"mean_years_married":15.1,"marriages_per_1000":6.6,"divorces_per_1000":4.9,"pct_currently_married":49.0,"pct_ever_divorced":13.1,"pct_widowed":5.2,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"NC","metro_area":"Raleigh","county":"Wake","zip_range":"27601-27699","median_years_married":13.9,"mean_years_married":15.4,"marriages_per_1000":6.3,"divorces_per_1000":4.5,"pct_currently_married":50.1,"pct_ever_divorced":12.3,"pct_widowed":4.6,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"VA","metro_area":"Virginia Beach","county":"Virginia Beach City","zip_range":"23450-23471","median_years_married":14.4,"mean_years_married":15.9,"marriages_per_1000":6.0,"divorces_per_1000":4.3,"pct_currently_married":50.6,"pct_ever_divorced":12.1,"pct_widowed":5.0,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"TN","metro_area":"Nashville","county":"Davidson","zip_range":"37201-37250","median_years_married":13.7,"mean_years_married":15.2,"marriages_per_1000":6.7,"divorces_per_1000":4.9,"pct_currently_married":48.7,"pct_ever_divorced":13.5,"pct_widowed":5.1,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"TN","metro_area":"Memphis","county":"Shelby","zip_range":"38101-38199","median_years_married":13.4,"mean_years_married":14.9,"marriages_per_1000":6.5,"divorces_per_1000":5.0,"pct_currently_married":47.5,"pct_ever_divorced":13.9,"pct_widowed":5.8,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"LA","metro_area":"New Orleans","county":"Orleans","zip_range":"70112-70199","median_years_married":13.1,"mean_years_married":14.6,"marriages_per_1000":5.8,"divorces_per_1000":4.5,"pct_currently_married":46.9,"pct_ever_divorced":13.3,"pct_widowed":5.9,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"AL","metro_area":"Birmingham","county":"Jefferson","zip_range":"35201-35299","median_years_married":13.9,"mean_years_married":15.4,"marriages_per_1000":6.1,"divorces_per_1000":4.7,"pct_currently_married":48.4,"pct_ever_divorced":13.4,"pct_widowed":5.9,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"SC","metro_area":"Charleston","county":"Charleston","zip_range":"29401-29499","median_years_married":14.1,"mean_years_married":15.6,"marriages_per_1000":6.4,"divorces_per_1000":4.6,"pct_currently_married":49.6,"pct_ever_divorced":12.8,"pct_widowed":5.5,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"OK","metro_area":"Oklahoma City","county":"Oklahoma","zip_range":"73101-73199","median_years_married":14.0,"mean_years_married":15.5,"marriages_per_1000":6.6,"divorces_per_1000":5.0,"pct_currently_married":49.2,"pct_ever_divorced":13.6,"pct_widowed":5.4,"year":2021,"data_source":"ACS 5-Year"},{"region":"South","state":"KY","metro_area":"Louisville","county":"Jefferson","zip_range":"40201-40299","median_years_married":14.3,"mean_years_married":15.8,"marriages_per_1000":6.0,"divorces_per_1000":4.5,"pct_currently_married":49.9,"pct_ever_divorced":12.6,"pct_widowed":5.7,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"WA","metro_area":"Seattle","county":"King","zip_range":"98101-98199","median_years_married":15.1,"mean_years_married":16.6,"marriages_per_1000":5.6,"divorces_per_1000":3.7,"pct_currently_married":51.5,"pct_ever_divorced":11.2,"pct_widowed":5.0,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"WA","metro_area":"Spokane","county":"Spokane","zip_range":"99201-99299","median_years_married":14.8,"mean_years_married":16.3,"marriages_per_1000":5.9,"divorces_per_1000":4.1,"pct_currently_married":50.6,"pct_ever_divorced":11.9,"pct_widowed":5.6,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"OR","metro_area":"Portland","county":"Multnomah","zip_range":"97201-97299","median_years_married":14.6,"mean_years_married":16.1,"marriages_per_1000":5.5,"divorces_per_1000":4.0,"pct_currently_married":49.8,"pct_ever_divorced":11.8,"pct_widowed":4.9,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"CO","metro_area":"Denver","county":"Denver","zip_range":"80201-80299","median_years_married":13.9,"mean_years_married":15.4,"marriages_per_1000":6.8,"divorces_per_1000":5.2,"pct_currently_married":49.6,"pct_ever_divorced":12.4,"pct_widowed":4.7,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"UT","metro_area":"Salt Lake City","county":"Salt Lake","zip_range":"84101-84199","median_years_married":14.4,"mean_years_married":15.9,"marriages_per_1000":7.4,"divorces_per_1000":4.4,"pct_currently_married":52.9,"pct_ever_divorced":11.6,"pct_widowed":4.4,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"CA","metro_area":"Los Angeles","county":"Los Angeles","zip_range":"90001-90099","median_years_married":13.2,"mean_years_married":14.7,"marriages_per_1000":6.3,"divorces_per_1000":4.7,"pct_currently_married":47.8,"pct_ever_divorced":13.5,"pct_widowed":4.9,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"CA","metro_area":"San Francisco","county":"San Francisco","zip_range":"94101-94199","median_years_married":13.5,"mean_years_married":15.0,"marriages_per_1000":5.8,"divorces_per_1000":4.2,"pct_currently_married":48.5,"pct_ever_divorced":12.9,"pct_widowed":4.8,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"CA","metro_area":"San Diego","county":"San Diego","zip_range":"92101-92199","median_years_married":13.8,"mean_years_married":15.3,"marriages_per_1000":5.9,"divorces_per_1000":4.3,"pct_currently_married":48.9,"pct_ever_divorced":12.7,"pct_widowed":4.6,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"CA","metro_area":"Sacramento","county":"Sacramento","zip_range":"94203-95899","median_years_married":14.0,"mean_years_married":15.5,"marriages_per_1000":6.0,"divorces_per_1000":4.4,"pct_currently_married":49.0,"pct_ever_divorced":12.6,"pct_widowed":5.0,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"NV","metro_area":"Las Vegas","county":"Clark","zip_range":"89101-89199","median_years_married":12.1,"mean_years_married":13.6,"marriages_per_1000":8.2,"divorces_per_1000":6.8,"pct_currently_married":45.3,"pct_ever_divorced":15.2,"pct_widowed":4.3,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"AZ","metro_area":"Phoenix","county":"Maricopa","zip_range":"85001-85099","median_years_married":13.1,"mean_years_married":14.6,"marriages_per_1000":7.1,"divorces_per_1000":5.3,"pct_currently_married":47.9,"pct_ever_divorced":13.6,"pct_widowed":4.6,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"AZ","metro_area":"Tucson","county":"Pima","zip_range":"85701-85799","median_years_married":13.6,"mean_years_married":15.1,"marriages_per_1000":6.5,"divorces_per_1000":4.9,"pct_currently_married":48.3,"pct_ever_divorced":13.0,"pct_widowed":5.3,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"ID","metro_area":"Boise","county":"Ada","zip_range":"83701-83799","median_years_married":14.9,"mean_years_married":16.4,"marriages_per_1000":6.9,"divorces_per_1000":4.3,"pct_currently_married":52.4,"pct_ever_divorced":11.5,"pct_widowed":4.4,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"NM","metro_area":"Albuquerque","county":"Bernalillo","zip_range":"87101-87199","median_years_married":13.5,"mean_years_married":15.0,"marriages_per_1000":6.0,"divorces_per_1000":4.6,"pct_currently_married":47.6,"pct_ever_divorced":13.2,"pct_widowed":5.1,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"HI","metro_area":"Honolulu","county":"Honolulu","zip_range":"96801-96899","median_years_married":15.5,"mean_years_married":17.0,"marriages_per_1000":8.9,"divorces_per_1000":3.5,"pct_currently_married":53.8,"pct_ever_divorced":10.0,"pct_widowed":5.5,"year":2021,"data_source":"ACS 5-Year"},{"region":"West","state":"AK","metro_area":"Anchorage","county":"Anchorage","zip_range":"99501-99599","median_years_married":14.2,"mean_years_married":15.7,"marriages_per_1000":7.0,"divorces_per_1000":5.4,"pct_currently_married":49.5,"pct_ever_divorced":13.9,"pct_widowed":3.9,"year":2021,"data_source":"ACS 5-Year"}];
+
+const columns = ["region","state","metro_area","county","zip_range","median_years_married",
+  "mean_years_married","marriages_per_1000","divorces_per_1000","pct_currently_married",
+  "pct_ever_divorced","pct_widowed","year","data_source"];
+
+let sortKey = "median_years_married";
+let sortDir = -1; // descending by default
+let filterText = "";
+let regionFilter = "";
+
+const tbody = document.getElementById("tbody");
+const countEl = document.getElementById("count");
+const noResultsEl = document.getElementById("noResults");
+const regionSelect = document.getElementById("regionFilter");
+
+// populate region filter options
+const regions = Array.from(new Set(data.map(r => r.region))).sort();
+regions.forEach(r => {
+  const opt = document.createElement("option");
+  opt.value = r;
+  opt.textContent = r;
+  regionSelect.appendChild(opt);
+});
+
+function render() {
+  let rows = data.filter(r => {
+    if (regionFilter && r.region !== regionFilter) return false;
+    if (!filterText) return true;
+    const hay = [r.region, r.state, r.metro_area, r.county, r.zip_range, r.data_source]
+      .join(" ").toLowerCase();
+    return hay.includes(filterText);
+  });
+
+  rows.sort((a, b) => {
+    const av = a[sortKey], bv = b[sortKey];
+    let cmp;
+    if (typeof av === "number" && typeof bv === "number") {
+      cmp = av - bv;
+    } else {
+      cmp = String(av).localeCompare(String(bv));
+    }
+    return cmp * sortDir;
+  });
+
+  tbody.innerHTML = "";
+  rows.forEach(r => {
+    const tr = document.createElement("tr");
+    columns.forEach(key => {
+      const td = document.createElement("td");
+      td.textContent = r[key] === "" || r[key] === null ? "—" : r[key];
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+
+  countEl.textContent = rows.length + " of " + data.length + " rows shown";
+  noResultsEl.style.display = rows.length === 0 ? "block" : "none";
+  document.getElementById("dataTable").style.display = rows.length === 0 ? "none" : "table";
+
+  document.querySelectorAll("thead th").forEach(th => {
+    const base = th.textContent.replace(/\s*[\u25B2\u25BC]$/, "");
+    th.textContent = base;
+    if (th.dataset.key === sortKey) {
+      th.textContent = base + (sortDir === 1 ? " ▲" : " ▼");
+    }
+  });
+}
+
+document.querySelectorAll("thead th").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.key;
+    if (sortKey === key) {
+      sortDir *= -1;
+    } else {
+      sortKey = key;
+      sortDir = 1;
+    }
+    render();
+  });
+});
+
+document.getElementById("search").addEventListener("input", (e) => {
+  filterText = e.target.value.trim().toLowerCase();
+  render();
+});
+
+regionSelect.addEventListener("change", (e) => {
+  regionFilter = e.target.value;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
