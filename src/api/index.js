@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('./db');
+const { version } = require('./package.json');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -8,6 +9,10 @@ app.use(express.json());
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
+});
+
+app.get('/version', (_req, res) => {
+  res.json({ version });
 });
 
 // GET /tasks — list all tasks
