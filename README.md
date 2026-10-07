@@ -62,6 +62,7 @@ The API is not exposed directly, but you can reach it through the web container 
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/health` | Health check |
+| GET | `/api/uptime` | Process uptime in seconds (`{ "uptime": 123.45 }`) |
 | GET | `/tasks` | List all tasks |
 | POST | `/tasks` | Create a task (`{ "title": "..." }`) |
 | PATCH | `/tasks/:id` | Update a task (`{ "completed": true }` or `{ "title": "..." }`) |
