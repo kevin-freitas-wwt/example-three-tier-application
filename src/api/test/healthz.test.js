@@ -34,7 +34,7 @@ async function waitForHealth(url, child, timeoutMs) {
 test('GET /healthz returns ok', async (t) => {
     const port = await freePort();
     const child = spawn(process.execPath, [path.join(__dirname, '..', 'index.js')], {
-        env: { ...process.env, PORT: String(port), DATABASE_URL: '[redacted: credential]' },
+        env: { ...process.env, PORT: String(port), DATABASE_URL: 'postgres://unused@127.0.0.1:1/unused' },
         stdio: ['ignore', 'ignore', 'inherit'],
     });
     t.after(() => child.kill());
